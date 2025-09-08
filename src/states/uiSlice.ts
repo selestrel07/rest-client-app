@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface localeState {
+export interface localeState {
   locale: "en" | "ru";
   isAuthenticated: boolean;
 }
