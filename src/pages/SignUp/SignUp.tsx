@@ -1,5 +1,5 @@
-export { authLoader as loader } from "../../loaders/authLoader.tsx";
+export { authLoader as loader } from '../../loaders/authLoader.tsx';
 
 export default function SignUp() {
-  return (<>This is a Sign Up page</>)
+  return <>This is a Sign Up page</>;
 }

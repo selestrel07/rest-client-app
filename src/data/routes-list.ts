@@ -3,5 +3,5 @@ export const routesList = {
   login: 'signin',
   register: 'signup',
   client: 'rest-client',
-  any: '*'
-}
+  any: '*',
+};

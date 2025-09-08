@@ -5,4 +5,4 @@ export const methods = {
   DELETE: 'DELETE',
   UPDATE: 'UPDATE',
   OPTIONS: 'OPTIONS',
-}
+};

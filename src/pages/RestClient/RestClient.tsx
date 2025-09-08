@@ -1,9 +1,15 @@
-import { redirect, useParams } from "react-router";
-import { getAuthToken } from "../../utils/getAuthToken.ts";
-import { routesList } from "../../data/routes-list.ts";
-import { methods } from "../../data/supported-methods.ts";
+import { redirect, useParams } from 'react-router';
+import { getAuthToken } from '../../utils/getAuthToken.ts';
+import { routesList } from '../../data/routes-list.ts';
+import { methods } from '../../data/supported-methods.ts';
 
-export async function loader({ params, request }: { params: Record<string, string>, request: Request }) {
+export async function loader({
+  params,
+  request,
+}: {
+  params: Record<string, string>;
+  request: Request;
+}) {
   //redirect to the /main route in case of user isn't authenticated
   const token = await getAuthToken(request);
 
@@ -20,5 +26,5 @@ export async function loader({ params, request }: { params: Record<string, strin
 
 export default function RestClient() {
   const { url, body } = useParams();
-  return (<>{`This is a rest client page with url: ${url} and body: ${body}`}</>)
+  return <>{`This is a rest client page with url: ${url} and body: ${body}`}</>;
 }

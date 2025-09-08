@@ -26,10 +26,8 @@
     "baseUrl": "./src",
     "paths": {
       "@assets/*": ["./assets/*"],
-      "@components": ["./components/index.ts"],
+      "@components": ["./components/index.ts"]
     }
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

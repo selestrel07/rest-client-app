@@ -1,6 +1,6 @@
-import { getAuthToken } from "../utils/getAuthToken.ts";
-import { redirect } from "react-router";
-import { routesList } from "../data/routes-list.ts";
+import { getAuthToken } from '../utils/getAuthToken.ts';
+import { redirect } from 'react-router';
+import { routesList } from '../data/routes-list.ts';
 
 export async function authLoader({ request }: { request: Request }) {
   const token = await getAuthToken(request);
