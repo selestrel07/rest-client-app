@@ -1,5 +1,11 @@
+import { Footer } from "@components";
+
 function App() {
-  return <></>;
+  return (
+    <>
+      <Footer/>
+    </>
+  )
 }
 
 export default App;
