@@ -1,6 +1,6 @@
 import type { FC } from "react";
-import logo from "../../assets/rss-logo.svg";
-import githubLogo from "../../assets/github-mark.svg";
+import logo from "@assets/rss-logo.svg";
+import githubLogo from "@assets/github-mark.svg";
 import { TEAM } from "../../data/team.ts";
 import { ExternalLink, Logo } from "@components";
 
@@ -10,7 +10,7 @@ export const Footer: FC = () => {
       <ExternalLink data-testid="react-course-link" href={"https://rs.school/courses/reactjs"}>
         <Logo src={logo} alt={"RS School logo"} />
       </ExternalLink>
-      <span>2025 © created by:</span>
+      <span>2025 &copy; created by:</span>
       <ul className="flex gap-2.5">
         {Object.entries(TEAM).map(([name, github]) => (
           <li key={name}>
