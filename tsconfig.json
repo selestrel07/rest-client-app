@@ -5,7 +5,12 @@
       "@components/*": ["components/*"],
       "states/*": ["states/*"],
       "store/*": ["store/*"]
-    }
+    },
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true
   },
   "files": [],
   "references": [
