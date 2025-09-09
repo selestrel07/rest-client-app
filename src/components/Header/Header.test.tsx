@@ -1,13 +1,12 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import uiReducer from "../../states/uiSlice";
 import { Header } from "./Header";
-import { describe, it, expect, beforeEach } from "vitest";
-import type { localeState } from '../../states/uiSlice';
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import type { localeState } from "../../states/uiSlice";
 
-
-const renderWithStore = (preloadedState?: { ui: localeState} ) => {
+const renderWithStore = (preloadedState?: { ui: localeState }) => {
   const store = configureStore({
     reducer: { ui: uiReducer },
     preloadedState,
@@ -23,6 +22,7 @@ const renderWithStore = (preloadedState?: { ui: localeState} ) => {
 describe("Header component", () => {
   beforeEach(() => {
     window.scrollY = 0;
+    cleanup();
   });
 
   it("renders link Main", () => {
@@ -30,17 +30,17 @@ describe("Header component", () => {
     expect(screen.getByText("Main")).toBeInTheDocument();
   });
 
-  it("shows Sign out, if user is authentificate", () => {
+  it("shows Sign out, if user is authenticated", () => {
     renderWithStore({ ui: { isAuthenticated: true, locale: "en" } });
     expect(screen.getByText("Sign out")).toBeInTheDocument();
   });
 
-  it("doesn't Sign out, if user is not authentificate", () => {
+  it("doesn't show Sign out, if user is not authenticated", () => {
     renderWithStore({ ui: { isAuthenticated: false, locale: "en" } });
     expect(screen.queryByText("Sign out")).not.toBeInTheDocument();
   });
 
-  it("change styles with scroll", () => {
+  it("changes styles with scroll", () => {
     renderWithStore({ ui: { isAuthenticated: true, locale: "en" } });
 
     const header = screen.getByRole("banner");
@@ -53,5 +53,35 @@ describe("Header component", () => {
     expect(header.className).toContain("bg-violet-400");
     expect(header.className).toContain("h-14");
     expect(header.className).toContain("shadow-2xl");
+  });
+
+  it("dispatches signOut when button clicked", () => {
+    const store = configureStore({
+      reducer: { ui: uiReducer },
+      preloadedState: {
+        ui: { isAuthenticated: true, locale: "en" },
+      } satisfies { ui: localeState },
+    });    
+
+    render(
+      <Provider store={store}>
+        <Header />
+      </Provider>
+    );
+
+    fireEvent.click(screen.getByText("Sign out"));
+
+    expect(store.getState().ui.isAuthenticated).toBe(false);
+  });
+
+  it("removes event listener on unmount", () => {
+    const removeSpy = vi.spyOn(window, "removeEventListener");
+
+    const { unmount } = renderWithStore({
+      ui: { isAuthenticated: true, locale: "en" },
+    });
+
+    unmount();
+    expect(removeSpy).toHaveBeenCalledWith("scroll", expect.any(Function));
   });
 });
