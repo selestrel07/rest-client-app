@@ -1,48 +1,37 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
+import "./ErrorBoundary.css";
 
-interface ErrorBoundaryProps {
-  children: ReactNode;
-}
+type ErrorBoundaryProps = {
+  fallback: ReactNode;
+  children: ReactNode | ReactNode[];
+};
 
-interface ErrorBoundaryState {
-  hasError: boolean;
-  errorMessage: string;
-}
+type ErrorBoundaryState = {
+  error: Error | undefined;
+};
 
-class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false, errorMessage: "" };
+    this.state = { error: undefined };
   }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, errorMessage: error.message };
+    return { error };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    console.error("Ошибка, перехваченная границей:", error, errorInfo);
+  componentDidCatch(error: Error, info: ErrorInfo): void {
+    console.error("Error caught by boundary:", error, info);
   }
 
   render(): ReactNode {
-    if (this.state.hasError) {
-      return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-          <h2 className="text-xl font-bold text-red-600">
-            Что-то пошло не так
-          </h2>
-          <p className="mt-2 text-gray-700">{this.state.errorMessage}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            Попробовать снова
-          </button>
-        </div>
-      );
+    if (this.state.error) {
+      return this.props.fallback;
     }
 
     return this.props.children;
   }
 }
-
-export default ErrorBoundary;
