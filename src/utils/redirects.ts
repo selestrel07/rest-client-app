@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { getToken } from './getAuthToken';
-import { redirect } from '../i18n/navigation';
-import { routesList } from '../data/routes-list';
+import { redirect } from '@i18n/navigation';
+import { routesList } from '@data/routes-list';
 
 export async function redirectIfNotAuthenticated(locale: string) {
   const cookieStore = await cookies();

@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { Footer } from '@components';
 import { NextIntlClientProvider } from 'next-intl';
 import { hasLocale } from 'use-intl';
-import { routing } from '../../i18n/routing';
+import { routing } from '@i18n/routing';
 import { notFound } from 'next/navigation';
 import '../global.css';
 

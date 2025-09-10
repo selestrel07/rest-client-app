@@ -36,6 +36,12 @@
       ],
       "@utils": [
         "./utils/index.ts"
+      ],
+      "@i18n/*": [
+        "./i18n/*"
+      ],
+      "@data/*": [
+        "./data/*"
       ]
     },
     "types": [
