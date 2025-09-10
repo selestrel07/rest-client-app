@@ -12,7 +12,7 @@ export default defineConfig({
       reporter: ['text', 'html'],
       reportsDirectory: './coverage',
       include: ['src/**/*.{ts,tsx}'],
-      exclude: ['node_modules/', 'src/setupTests.ts', '*.config.ts', '*.config.js', '**/*.d.ts'],
+      exclude: ['node_modules/**', 'src/setupTests.ts', '*.config.ts', '*.config.js', '**/*.d.ts'],
     },
   },
   plugins: [tsconfigPaths()],
