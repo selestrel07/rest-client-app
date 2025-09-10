@@ -13,5 +13,8 @@
   },
   "NotFoundPage": {
     "text": "Oops! It looks like the page you requested wasn't found! Please use the header links to navigate to one of the existing pages."
+  },
+  "Footer": {
+    "developed by": "developed by"
   }
 }

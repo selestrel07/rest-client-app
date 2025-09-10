@@ -1,10 +1,12 @@
 import type { FC } from 'react';
 import logo from '@assets/rss-logo.svg';
 import githubLogo from '@assets/github-mark.svg';
-import { TEAM } from '../../data/team';
+import { TEAM } from '@data/team';
 import { ExternalLink, Logo } from '@components';
+import { useTranslations } from 'next-intl';
 
 export const Footer: FC = () => {
+  const t = useTranslations('Footer');
   return (
     <footer className="flex justify-center gap-2.5 bg-violet-300 p-1.5 text-violet-950">
       <ExternalLink
@@ -13,7 +15,7 @@ export const Footer: FC = () => {
       >
         <Logo src={logo} alt={'RS School logo'} />
       </ExternalLink>
-      <span>2025 &copy; created by:</span>
+      <span>{`2025 © ${t('developed by')}:`}</span>
       <ul className="flex gap-2.5">
         {Object.entries(TEAM).map(([name, github]) => (
           <li key={name}>
