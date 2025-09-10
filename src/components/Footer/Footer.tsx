@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import logo from '@assets/rss-logo.svg';
 import githubLogo from '@assets/github-mark.svg';
-import { TEAM } from '../../data/team.ts';
+import { TEAM } from '../../data/team';
 import { ExternalLink, Logo } from '@components';
 
 export const Footer: FC = () => {

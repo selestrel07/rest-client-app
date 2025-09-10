@@ -1,0 +1,17 @@
+{
+  "MainPage": {
+    "text": "This is main page"
+  },
+  "SignInPage": {
+    "text": "This is Sign In page"
+  },
+  "SignUpPage": {
+    "text": "This is Sign Up page"
+  },
+  "RestClientPage": {
+    "text": "This is Rest Client page"
+  },
+  "NotFoundPage": {
+    "text": "Oops! It looks like the page you requested wasn't found! Please use the header links to navigate to one of the existing pages."
+  }
+}

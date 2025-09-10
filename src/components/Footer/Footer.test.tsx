@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Footer } from '@components';
-import { TEAM } from '../../data/team.ts';
+import { TEAM } from '../../data/team';
 
 describe('Footer component tests', () => {
   it('renders correctly', () => {
