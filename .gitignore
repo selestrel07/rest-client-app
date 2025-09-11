@@ -31,3 +31,4 @@ coverage
 # Next files
 .next/*
 next-env.d.ts
+.env
