@@ -16,7 +16,7 @@ export default function NotFound() {
         <div className="flex items-center justify-center w-screen min-h-[calc(100vh-36px)]">
           {t('text')}
         </div>
-        <Footer/>
+        <Footer />
       </body>
     </html>
   );

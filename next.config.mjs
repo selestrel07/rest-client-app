@@ -5,7 +5,7 @@ const nextConfig = {
   distDir: 'dist',
   experimental: {
     globalNotFound: true,
-  }
+  },
 };
 
 const withNextIntl = createNextIntlPlugin();

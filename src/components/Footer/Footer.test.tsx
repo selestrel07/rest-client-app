@@ -6,9 +6,14 @@ import { NextIntlClientProvider } from 'next-intl';
 
 describe('Footer component tests', () => {
   it('renders correctly', () => {
-    render(<NextIntlClientProvider locale="en" messages={{ Footer: { 'developed by': 'developed by' } }}>
-      <Footer />
-    </NextIntlClientProvider>);
+    render(
+      <NextIntlClientProvider
+        locale="en"
+        messages={{ Footer: { 'developed by': 'developed by' } }}
+      >
+        <Footer />
+      </NextIntlClientProvider>
+    );
 
     const courseLink = screen.getByTestId('react-course-link');
 
@@ -16,7 +21,7 @@ describe('Footer component tests', () => {
     expect(courseLink).toBeInTheDocument();
     expect(courseLink).toHaveAttribute(
       'href',
-      'https://rs.school/courses/reactjs',
+      'https://rs.school/courses/reactjs'
     );
     Object.entries(TEAM).forEach(([name, githubLink]) => {
       const link = screen.getByTestId(`github-${name}`);

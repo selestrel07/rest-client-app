@@ -13,9 +13,12 @@ export const metadata: Metadata = {
     'Rest Client App (Next.js) is an application developed in scope of RS School 2025 Q3 React Course',
 };
 
-export default async function RootLayout({ children, params }: {
-  children: ReactNode,
-  params: Promise<{ locale: string }>
+export default async function RootLayout({
+  children,
+  params,
+}: {
+  children: ReactNode;
+  params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
@@ -26,7 +29,10 @@ export default async function RootLayout({ children, params }: {
     <html lang={locale}>
       <body>
         <NextIntlClientProvider>
-          <div id="root" className="flex items-center justify-center w-screen min-h-[calc(100vh-36px)]">
+          <div
+            id="root"
+            className="flex items-center justify-center w-screen min-h-[calc(100vh-36px)]"
+          >
             {children}
           </div>
         </NextIntlClientProvider>

@@ -7,11 +7,7 @@
     "strictFunctionTypes": true,
     "strictBindCallApply": true,
     "target": "ES2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "noEmit": true,
@@ -28,26 +24,13 @@
     ],
     "baseUrl": "./src",
     "paths": {
-      "@assets/*": [
-        "./assets/*"
-      ],
-      "@components": [
-        "./components/index.ts"
-      ],
-      "@utils": [
-        "./utils/index.ts"
-      ],
-      "@i18n/*": [
-        "./i18n/*"
-      ],
-      "@data/*": [
-        "./data/*"
-      ]
+      "@assets/*": ["./assets/*"],
+      "@components": ["./components/index.ts"],
+      "@utils": ["./utils/index.ts"],
+      "@i18n/*": ["./i18n/*"],
+      "@data/*": ["./data/*"]
     },
-    "types": [
-      "vitest/globals",
-      "@testing-library/jest-dom"
-    ]
+    "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
   "include": [
     "**/*.ts",
@@ -56,7 +39,5 @@
     "next-env.d.ts",
     "dist/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }
