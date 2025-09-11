@@ -7,13 +7,14 @@ import tseslint from 'typescript-eslint';
 import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
 import reactCompiler from 'eslint-plugin-react-compiler';
 
-export default tseslint.config(
+export default tseslint.config([
   { ignores: ['dist', 'coverage', 'node_modules'] },
   {
     extends: [
       js.configs.recommended,
       ...tseslint.configs.strict,
       eslintPluginPrettier,
+      "next"
     ],
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
@@ -42,4 +43,4 @@ export default tseslint.config(
       },
     },
   }
-);
+]);
