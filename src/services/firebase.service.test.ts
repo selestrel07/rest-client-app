@@ -8,9 +8,9 @@ import {
   loginWithEmailAndPassword,
   logout,
   registerUserWithEmailAndPassword,
-} from './firebase.service.ts';
+} from './firebase.service';
 import { FirebaseError } from 'firebase/app';
-import { INVALID_CREDENTIALS, NETWORK_ERROR } from '../data/error-messages.ts';
+import { INVALID_CREDENTIALS, NETWORK_ERROR } from '@data/error-messages';
 
 vi.mock('firebase/auth', () => {
   return {

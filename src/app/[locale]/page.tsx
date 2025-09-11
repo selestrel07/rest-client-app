@@ -1,5 +1,5 @@
-import { redirect } from '../../i18n/navigation';
-import { routesList } from '../../data/routes-list';
+import { redirect } from '@i18n/navigation';
+import { routesList } from '@data/routes-list';
 
 export default async function RootPage({
   params,
