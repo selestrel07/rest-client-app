@@ -13,7 +13,7 @@ export default defineConfig({
       reportsDirectory: './coverage',
       include: ['src/**/*.{ts,tsx}'],
       exclude: [
-        'node_modules/',
+        'node_modules/**',
         'src/setupTests.ts',
         '*.config.ts',
         '*.config.js',
