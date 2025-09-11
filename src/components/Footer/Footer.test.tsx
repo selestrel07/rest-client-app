@@ -1,15 +1,23 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Footer } from '@components';
-import { TEAM } from '../../data/team.ts';
+import { TEAM } from '@data/team';
+import { NextIntlClientProvider } from 'next-intl';
 
 describe('Footer component tests', () => {
   it('renders correctly', () => {
-    render(<Footer />);
+    render(
+      <NextIntlClientProvider
+        locale="en"
+        messages={{ Footer: { 'developed by': 'developed by' } }}
+      >
+        <Footer />
+      </NextIntlClientProvider>
+    );
 
     const courseLink = screen.getByTestId('react-course-link');
 
-    expect(screen.getByText('2025 © created by:')).toBeInTheDocument();
+    expect(screen.getByText('2025 © developed by:')).toBeInTheDocument();
     expect(courseLink).toBeInTheDocument();
     expect(courseLink).toHaveAttribute(
       'href',

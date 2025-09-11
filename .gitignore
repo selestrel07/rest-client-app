@@ -27,4 +27,8 @@ dist-ssr
 package-lock.json
 coverage
 .react-router
+
+# Next files
+.next/*
+next-env.d.ts
 .env
