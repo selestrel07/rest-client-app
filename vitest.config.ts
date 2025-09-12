@@ -1,6 +1,7 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vitest/config';
-import tsconfigPaths from "vite-tsconfig-paths";
+import react from '@vitejs/plugin-react';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   test: {
@@ -12,8 +13,14 @@ export default defineConfig({
       reporter: ['text', 'html'],
       reportsDirectory: './coverage',
       include: ['src/**/*.{ts,tsx}'],
-      exclude: ['node_modules/', 'src/setupTests.ts', '*.config.ts', '*.config.js', '**/*.d.ts'],
+      exclude: [
+        'node_modules/**',
+        'src/setupTests.ts',
+        '*.config.ts',
+        '*.config.js',
+        '**/*.d.ts',
+      ],
     },
   },
-  plugins: [tsconfigPaths()],
-})
+  plugins: [tsconfigPaths(), react()],
+});

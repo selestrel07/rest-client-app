@@ -1,43 +1,46 @@
-import { LanguageToggle } from "@components";
-import type {FC} from "react";
-import { useEffect, useState } from "react";
-import { BiCool } from "react-icons/bi";
-import { useDispatch, useSelector } from "react-redux";
-import { signOut } from "states/uiSlice";
-import type { AppDispatch, RootState } from "store/store";
+'use client';
+
+import { LanguageToggle } from '@components';
+import type { FC } from 'react';
+import { useEffect, useState } from 'react';
+import { BiCool } from 'react-icons/bi';
+import { useDispatch, useSelector } from 'react-redux';
+import { signOut } from 'states/uiSlice';
+import type { AppDispatch, RootState } from 'store/store';
+import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 
 export const Header: FC = () => {
+  const t = useTranslations('Header');
   const [scrolled, setScrolled] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
 
-  const isAuthenticated = useSelector((state: RootState) => state.ui.isAuthenticated);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.ui.isAuthenticated
+  );
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 0);
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <header
       className={`sticky top-0 z-50 flex items-center justify-between px-6 transition-all duration-300 ${
-        scrolled
-          ? "bg-violet-400 h-14 shadow-2xl"
-          : "bg-violet-300 h-20"
-        } text-violet-50`}
+        scrolled ? 'bg-violet-400 h-14 shadow-2xl' : 'bg-violet-300 h-20'
+      } text-violet-50`}
     >
       <div className="flex items-center gap-2">
         <BiCool
           className={`transition-all duration-300 ${
-            scrolled
-              ? "size-12 text-violet-700"
-              : "size-14 text-violet-500"
+            scrolled ? 'size-12 text-violet-700' : 'size-14 text-violet-500'
           }`}
         />
       </div>
-      
+
       <div>
         <LanguageToggle />
       </div>
@@ -45,7 +48,9 @@ export const Header: FC = () => {
       <nav>
         <ul className="flex gap-4 items-center">
           <li>
-            <a href="/" className="text-lg">Main</a>
+            <Link href="/" className="text-lg">
+              {t('main')}
+            </Link>
           </li>
 
           {isAuthenticated && (
@@ -53,11 +58,13 @@ export const Header: FC = () => {
               <button
                 onClick={() => dispatch(signOut())}
                 className="px-3 py-1 rounded bg-violet-600 hover:bg-violet-500 transition"
-              >Sign out</button>
+              >
+                {t('signout')}
+              </button>
             </li>
           )}
         </ul>
       </nav>
     </header>
-  )
-}
+  );
+};

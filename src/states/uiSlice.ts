@@ -1,21 +1,24 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface localeState {
-  locale: "en" | "ru";
+  locale: 'en' | 'ru';
   isAuthenticated: boolean;
 }
 
 const initialState: localeState = {
-  locale: "en",
-  isAuthenticated: true,
+  locale: 'en',
+  isAuthenticated: false,
 };
 
 const uiSlice = createSlice({
-  name: "ui",
+  name: 'ui',
   initialState,
   reducers: {
     toggleLocale(state) {
-      state.locale = state.locale === "en" ? "ru" : "en";
+      state.locale = state.locale === 'en' ? 'ru' : 'en';
+    },
+    setLocale(state, action: PayloadAction<'en' | 'ru'>) {
+      state.locale = action.payload;
     },
     signOut(state) {
       state.isAuthenticated = false;
@@ -23,5 +26,5 @@ const uiSlice = createSlice({
   },
 });
 
-export const { toggleLocale, signOut } = uiSlice.actions;
+export const { toggleLocale, setLocale, signOut } = uiSlice.actions;
 export default uiSlice.reducer;
