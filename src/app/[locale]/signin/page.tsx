@@ -1,13 +1,7 @@
-import { redirectIfAuthenticated } from '@utils';
-import { SignInForm } from '@components';
+import { useTranslations } from 'next-intl';
 
-export default async function SignInPage({
-  params,
-}: {
-  params: { locale: string };
-}) {
-  const { locale } = params;
-  await redirectIfAuthenticated(locale);
+export default function SignInPage() {
+  const t = useTranslations('SignInPage');
 
-  return <SignInForm />;
+  return <div>{t('text')}</div>;
 }
