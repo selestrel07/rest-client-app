@@ -1,3 +1,6 @@
 export * from './Logo/Logo';
 export * from './ExternalLink/ExternalLink';
 export * from './Footer/Footer';
+export * from './ErrorBoundary/ErrorBoundary';
+export * from './FallBackUI/FallBackUI';
+export * from './Toast/Toast';
