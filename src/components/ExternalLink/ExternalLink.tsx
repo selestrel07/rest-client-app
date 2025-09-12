@@ -15,6 +15,7 @@ export const ExternalLink: FC<ExternalLinkProps> = ({
       className="flex gap-1 items-center"
       href={href}
       target="_blank"
+      rel="noreferrer"
       {...props}
     >
       {children}

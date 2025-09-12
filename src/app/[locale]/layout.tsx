@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { Footer } from '@components';
+import { ErrorBoundary } from '@components';
+import { FallbackUI } from '@components';
 import { NextIntlClientProvider } from 'next-intl';
 import { hasLocale } from 'use-intl';
 import { routing } from '@i18n/routing';
@@ -28,15 +30,17 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <body className="bg-violet-50">
-        <NextIntlClientProvider>
-          <div
-            id="root"
-            className="flex items-center justify-center w-full min-h-[calc(100vh-36px)]"
-          >
-            {children}
-          </div>
-        </NextIntlClientProvider>
-        <Footer />
+        <ErrorBoundary fallback={<FallbackUI />}>
+          <NextIntlClientProvider>
+            <div
+              id="root"
+              className="flex items-center justify-center w-screen min-h-[calc(100vh-36px)]"
+            >
+              {children}
+            </div>
+          </NextIntlClientProvider>
+          <Footer />
+        </ErrorBoundary>
       </body>
     </html>
   );

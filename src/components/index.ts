@@ -3,3 +3,6 @@ export * from './ExternalLink/ExternalLink';
 export * from './Footer/Footer';
 export * from './CodeGenerator/CodeGenerator';
 export * from './CodeGenerator/ButtonCopy';
+export * from './ErrorBoundary/ErrorBoundary';
+export * from './FallBackUI/FallBackUI';
+export * from './Toast/Toast';

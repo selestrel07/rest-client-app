@@ -8,5 +8,5 @@ export default async function SignInPage({
   const { locale } = await params;
   await redirectIfAuthenticated(locale);
 
-  return <div>Sign In</div>;
+  return <div>{'text'}</div>;
 }
