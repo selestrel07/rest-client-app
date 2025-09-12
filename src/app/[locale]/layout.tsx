@@ -27,11 +27,11 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <body>
+      <body className="bg-violet-50">
         <NextIntlClientProvider>
           <div
             id="root"
-            className="flex items-center justify-center w-screen min-h-[calc(100vh-36px)]"
+            className="flex items-center justify-center w-full min-h-[calc(100vh-36px)]"
           >
             {children}
           </div>

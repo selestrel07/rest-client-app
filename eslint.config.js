@@ -6,6 +6,7 @@ import react from 'eslint-plugin-react';
 import tseslint from 'typescript-eslint';
 import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
 import reactCompiler from 'eslint-plugin-react-compiler';
+import nextPlugin from "@next/eslint-plugin-next";
 
 export default tseslint.config([
   { ignores: ['dist', 'coverage', 'node_modules'] },
@@ -14,7 +15,7 @@ export default tseslint.config([
       js.configs.recommended,
       ...tseslint.configs.strict,
       eslintPluginPrettier,
-      "next"
+      nextPlugin.configs["core-web-vitals"]
     ],
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
@@ -26,6 +27,7 @@ export default tseslint.config([
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       'react-compiler': reactCompiler,
+      "@next/next": nextPlugin,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,

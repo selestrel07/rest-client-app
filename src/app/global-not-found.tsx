@@ -13,7 +13,7 @@ export default function NotFound() {
   return (
     <html>
       <body>
-        <div className="flex items-center justify-center w-screen min-h-[calc(100vh-36px)]">
+        <div className="flex items-center justify-center w-full min-h-[calc(100vh-36px)] bg-violet-50">
           {t('text')}
         </div>
         <Footer />
