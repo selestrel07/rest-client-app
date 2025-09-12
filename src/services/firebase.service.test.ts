@@ -1,15 +1,23 @@
 import { describe, it, vi, expect, beforeEach, type Mock } from 'vitest';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { loginWithEmailAndPassword, logout, registerUserWithEmailAndPassword } from './firebase.service.ts';
-import { FirebaseError } from "firebase/app";
-import { INVALID_CREDENTIALS, NETWORK_ERROR } from "../data/error-messages.ts";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth';
+import {
+  loginWithEmailAndPassword,
+  logout,
+  registerUserWithEmailAndPassword,
+} from './firebase.service';
+import { FirebaseError } from 'firebase/app';
+import { INVALID_CREDENTIALS, NETWORK_ERROR } from '@data/error-messages';
 
 vi.mock('firebase/auth', () => {
   return {
     getAuth: vi.fn(() => ({})),
     createUserWithEmailAndPassword: vi.fn(),
     signInWithEmailAndPassword: vi.fn(),
-    signOut: vi.fn()
+    signOut: vi.fn(),
   };
 });
 
@@ -23,18 +31,27 @@ describe('User registration tests', () => {
       user: { uid: '123', email: 'test@example.com' },
     });
 
-    const result = await registerUserWithEmailAndPassword('test@example.com', 'password');
+    const result = await registerUserWithEmailAndPassword(
+      'test@example.com',
+      'password'
+    );
 
-    expect(createUserWithEmailAndPassword).toBeCalledWith(expect.any(Object), 'test@example.com', 'password');
+    expect(createUserWithEmailAndPassword).toBeCalledWith(
+      expect.any(Object),
+      'test@example.com',
+      'password'
+    );
     expect(result?.uid).toBe('123');
   });
 
   it('Should reject in case of error', async () => {
-    (createUserWithEmailAndPassword as Mock)
-      .mockRejectedValue(new FirebaseError('auth','email-already-in-use'));
+    (createUserWithEmailAndPassword as Mock).mockRejectedValue(
+      new FirebaseError('auth', 'email-already-in-use')
+    );
 
-    await expect(registerUserWithEmailAndPassword('test@example.com', 'password'))
-      .rejects.toThrowError(INVALID_CREDENTIALS);
+    await expect(
+      registerUserWithEmailAndPassword('test@example.com', 'password')
+    ).rejects.toThrowError(INVALID_CREDENTIALS);
 
     expect(createUserWithEmailAndPassword).toHaveBeenCalled();
   });
@@ -45,19 +62,28 @@ describe('User registration tests', () => {
         user: { uid: '123', email: 'test@example.com' },
       });
 
-      const result = await loginWithEmailAndPassword('test@example.com', 'password');
+      const result = await loginWithEmailAndPassword(
+        'test@example.com',
+        'password'
+      );
 
-      expect(signInWithEmailAndPassword).toBeCalledWith(expect.any(Object), 'test@example.com', 'password');
+      expect(signInWithEmailAndPassword).toBeCalledWith(
+        expect.any(Object),
+        'test@example.com',
+        'password'
+      );
       expect(result?.uid).toBe('123');
-    })
+    });
   });
 
   it('Should reject in case of error', async () => {
-    (signInWithEmailAndPassword as Mock)
-      .mockRejectedValue(new FirebaseError('auth','invalid-credentials'));
+    (signInWithEmailAndPassword as Mock).mockRejectedValue(
+      new FirebaseError('auth', 'invalid-credentials')
+    );
 
-    await expect(loginWithEmailAndPassword('test@example.com', 'password'))
-      .rejects.toThrowError(INVALID_CREDENTIALS);
+    await expect(
+      loginWithEmailAndPassword('test@example.com', 'password')
+    ).rejects.toThrowError(INVALID_CREDENTIALS);
 
     expect(signInWithEmailAndPassword).toHaveBeenCalled();
   });
@@ -72,10 +98,12 @@ describe('User registration tests', () => {
     });
 
     it('Should reject in case of error', async () => {
-      (signOut as Mock).mockRejectedValue(new FirebaseError('auth','network-request-failed'));
+      (signOut as Mock).mockRejectedValue(
+        new FirebaseError('auth', 'network-request-failed')
+      );
 
       await expect(logout()).rejects.toThrowError(NETWORK_ERROR);
       expect(signOut).toHaveBeenCalled();
-    })
-  })
-})
+    });
+  });
+});

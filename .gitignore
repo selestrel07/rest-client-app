@@ -25,5 +25,10 @@ dist-ssr
 *.sw?
 
 package-lock.json
-.env
 coverage
+.react-router
+
+# Next files
+.next/*
+next-env.d.ts
+.env

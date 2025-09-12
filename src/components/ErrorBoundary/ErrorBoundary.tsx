@@ -1,4 +1,6 @@
-import { Component, type ErrorInfo, type ReactNode } from "react";
+'use client';
+
+import { Component, type ErrorInfo, type ReactNode } from 'react';
 
 type ErrorBoundaryProps = {
   fallback: ReactNode;
@@ -23,7 +25,7 @@ export class ErrorBoundary extends Component<
   }
 
   componentDidCatch(error: Error, info: ErrorInfo): void {
-    console.error("Error caught by boundary:", error, info);
+    console.error('Error caught by boundary:', error, info);
   }
 
   render(): ReactNode {

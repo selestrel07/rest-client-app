@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 export const useApi = () => {
   const [loading, setLoading] = useState(false);
@@ -17,7 +17,7 @@ export const useApi = () => {
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
         throw new Error(
-          `HTTP ${response.status}: ${data.message || "Server error"}`
+          `HTTP ${response.status}: ${data.message || 'Server error'}`
         );
       }
 
@@ -25,17 +25,17 @@ export const useApi = () => {
     } catch (err) {
       if (err instanceof Error) {
         if (
-          err.message.includes("Failed to fetch") ||
-          err.message.includes("Network")
+          err.message.includes('Failed to fetch') ||
+          err.message.includes('Network')
         ) {
           setError(
-            "Failed to connect to the server. Please check your internet connection or CORS settings."
+            'Failed to connect to the server. Please check your internet connection or CORS settings.'
           );
         } else {
           throw err;
         }
       } else {
-        setError("An unknown error occurred.");
+        setError('An unknown error occurred.');
       }
     } finally {
       setLoading(false);
