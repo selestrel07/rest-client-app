@@ -1,8 +1,18 @@
 import { CodeGenerator } from '@components';
+import dynamic from 'next/dynamic';
+
+const RestClientLazy = dynamic(
+  () =>
+    import('../../../../../components/RestClient/RestClient').then(
+      (m) => m.RestClient
+    ),
+  { loading: () => <p>Loading...</p> }
+);
 
 export default function RestClientPage() {
   return (
     <div className="flex justify-end w-full">
+      <RestClientLazy />
       <CodeGenerator
         request={{
           method: 'GET',
