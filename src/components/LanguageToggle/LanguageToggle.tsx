@@ -10,8 +10,9 @@ export const LanguageToggle = () => {
 
   const handleToggle = () => {
     const newLocale = locale === 'en' ? 'ru' : 'en';
-
     router.push({ pathname }, { locale: newLocale });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
