@@ -1,4 +1,4 @@
-import { redirectIfAuthenticated } from '@utils';
+import { redirectIfAuthenticated } from '@utils/redirects';
 
 export default async function SignInPage({
   params,

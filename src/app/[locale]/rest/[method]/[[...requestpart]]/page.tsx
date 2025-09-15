@@ -1,6 +1,19 @@
-import { useTranslations } from 'next-intl';
+import { CodeGenerator } from '@components';
 
 export default function RestClientPage() {
-  const t = useTranslations('RestClientPage');
-  return <div>{t('text')}</div>;
+  return (
+    <div className="flex justify-end w-full">
+      <CodeGenerator
+        request={{
+          method: 'GET',
+          url: 'http://localhost:3000/',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: '{"language": "curl","url": "http://localhost:3000/","headers": {"Accept": "application/json"}}',
+        }}
+      />
+    </div>
+  );
 }

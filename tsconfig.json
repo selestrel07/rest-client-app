@@ -26,9 +26,10 @@
     "paths": {
       "@assets/*": ["./assets/*"],
       "@components": ["./components/index.ts"],
-      "@utils": ["./utils/index.ts"],
+      "@utils/*": ["./utils/*"],
       "@i18n/*": ["./i18n/*"],
-      "@data/*": ["./data/*"]
+      "@data/*": ["./data/*"],
+      "@types": ["./types/index.ts"]
     },
     "types": ["vitest/globals", "@testing-library/jest-dom"]
   },

@@ -1,7 +1,7 @@
 import { Fragment, ReactNode } from 'react';
 import { notFound } from 'next/navigation';
 import { methods } from '@data/supported-methods';
-import { redirectIfNotAuthenticated } from '@utils';
+import { redirectIfAuthenticated } from '@utils/redirects';
 
 export default async function RestClientLayout({
   children,
@@ -11,7 +11,7 @@ export default async function RestClientLayout({
   params: Promise<{ locale: string; method: string; requestpart?: string[] }>;
 }) {
   const { locale, method, requestpart } = await params;
-  await redirectIfNotAuthenticated(locale);
+  await redirectIfAuthenticated(locale);
 
   if (
     (requestpart && requestpart.length > 2) ||

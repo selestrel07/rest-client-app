@@ -29,7 +29,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <body>
+      <body className="bg-violet-50">
         <ErrorBoundary fallback={<FallbackUI />}>
           <NextIntlClientProvider>
             <div
