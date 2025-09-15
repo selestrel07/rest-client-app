@@ -1,6 +1,9 @@
-import { useTranslations } from 'next-intl';
+import { AuthForm } from '@components';
 
 export default function SignUpPage() {
-  const t = useTranslations('SignUpPage');
-  return <div>{t('text')}</div>;
+  return (
+    <div>
+      <AuthForm isRegistration={true} />
+    </div>
+  );
 }
