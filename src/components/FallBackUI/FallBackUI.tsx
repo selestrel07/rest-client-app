@@ -1,3 +1,5 @@
+'use client';
+
 import type { FC } from 'react';
 
 export const FallbackUI: FC<{ onReset?: () => void }> = ({ onReset }) => {
