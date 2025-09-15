@@ -36,11 +36,13 @@ export const Header: FC = () => {
       } text-violet-50`}
     >
       <div className="flex items-center gap-2">
-        <BiCool
-          className={`transition-all duration-300 ${
-            scrolled ? 'size-12 text-violet-700' : 'size-14 text-violet-500'
-          }`}
-        />
+        <Link href="/" aria-label="Go to main page">
+          <BiCool
+            className={`transition-all duration-300 ${
+              scrolled ? 'size-12 text-violet-700' : 'size-14 text-violet-500'
+            }`}
+          />
+        </Link>
       </div>
 
       <div>
