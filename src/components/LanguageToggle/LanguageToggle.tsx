@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname } from '@i18n/navigation';
 import { useLocale } from 'next-intl';
 
 export const LanguageToggle = () => {
@@ -11,9 +11,7 @@ export const LanguageToggle = () => {
   const handleToggle = () => {
     const newLocale = locale === 'en' ? 'ru' : 'en';
 
-    const pathWithoutLocale = pathname.replace(/^\/(en|ru)/, '');
-
-    router.replace(`/${newLocale}${pathWithoutLocale}`);
+    router.push({ pathname }, { locale: newLocale });
   };
 
   return (

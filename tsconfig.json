@@ -28,6 +28,7 @@
       "@components": ["./components/index.ts"],
       "@utils": ["./utils/index.ts"],
       "@i18n/*": ["./i18n/*"],
+      "@messages/*": ["./messages/*"],
       "@data/*": ["./data/*"],
       "states/*": ["states/*"],
       "store/*": ["store/*"]

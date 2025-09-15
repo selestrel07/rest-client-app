@@ -3,15 +3,14 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { LanguageToggle } from './LanguageToggle';
 
 const mockUseLocale = vi.fn();
+const mockPush = vi.fn();
 
 vi.mock('next-intl', () => ({
   useLocale: () => mockUseLocale(),
 }));
 
-const mockReplace = vi.fn();
-
-vi.mock('next/navigation', () => ({
-  useRouter: () => ({ replace: mockReplace }),
+vi.mock('@i18n/navigation', () => ({
+  useRouter: () => ({ push: mockPush }),
   usePathname: () => '/en/main',
 }));
 
@@ -36,13 +35,16 @@ describe('LanguageToggle (next-intl)', () => {
     expect(screen.getByText('EN')).not.toHaveClass('font-bold');
   });
 
-  it('toggles locale on click', () => {
+  it('toggles locale from EN to RU on click', () => {
     mockUseLocale.mockReturnValue('en');
     render(<LanguageToggle />);
 
     fireEvent.click(screen.getByRole('button'));
 
-    expect(mockReplace).toHaveBeenCalledWith('/ru/main');
+    expect(mockPush).toHaveBeenCalledWith(
+      { pathname: '/en/main' },
+      { locale: 'ru' }
+    );
   });
 
   it('toggles locale from RU to EN on click', () => {
@@ -51,6 +53,9 @@ describe('LanguageToggle (next-intl)', () => {
 
     fireEvent.click(screen.getByRole('button'));
 
-    expect(mockReplace).toHaveBeenCalledWith('/en/main');
+    expect(mockPush).toHaveBeenCalledWith(
+      { pathname: '/en/main' },
+      { locale: 'en' }
+    );
   });
 });

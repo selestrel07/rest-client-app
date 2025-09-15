@@ -11,8 +11,10 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
 export const Header: FC = () => {
-  const t = useTranslations('Header');
   const [scrolled, setScrolled] = useState(false);
+
+  const t = useTranslations('Header');
+
   const dispatch = useDispatch<AppDispatch>();
 
   const isAuthenticated = useSelector(
