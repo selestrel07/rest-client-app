@@ -20,5 +20,24 @@
   "Header": {
     "main": "Main",
     "signout": "Sign out"
+  },
+  "AuthForm": {
+    "email": "Email:",
+    "password": "Password:",
+    "repeat-password": "Confirm password:",
+    "sign-in": "Sign In",
+    "sign-up": "Sign Up",
+    "errors": {
+      "invalidEmail": "Invalid email",
+      "requiredEmail": "Email is required",
+      "requiredPassword": "Password is required",
+      "minPassword": "Password must be at least length characters",
+      "lowercasePassword": "Password must contain a lowercase letter",
+      "uppercasePassword": "Password must contain an uppercase letter",
+      "numberPassword": "Password must contain a number",
+      "specialPassword": "Password must contain a special character",
+      "requiredConfirm": "Confirm password",
+      "matchPasswords": "Passwords must match"
+    }
   }
 }

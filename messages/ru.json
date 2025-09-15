@@ -20,5 +20,24 @@
   "Header": {
     "main": "Главная",
     "signout": "Выход"
+  },
+  "AuthForm": {
+    "email": "Электронная почта:",
+    "password": "Пароль:",
+    "repeat-password": "Подтвердите пароль:",
+    "sign-in": "Войти",
+    "sign-up": "Зарегистрироваться",
+    "errors": {
+      "invalidEmail": "Неверный формат электронной почты",
+      "requiredEmail": "Не задана электронная почта",
+      "requiredPassword": "Не задан пароль",
+      "minPassword": "Пароль должен быть от length символов",
+      "lowercasePassword": "Пароль должен включать маленькие буквы",
+      "uppercasePassword": "Пароль должен включать большие буквы",
+      "numberPassword": "Пароль должен включать цифры",
+      "specialPassword": "Пароль должен включать специальные символы",
+      "requiredConfirm": "Необходимо подтвердить пароль",
+      "matchPasswords": "Пароли не совпадают"
+    }
   }
 }
