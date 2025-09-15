@@ -18,8 +18,6 @@ export const schema = yup
         MIN_PASSWORD_LENGTH,
         `Password must be at least ${MIN_PASSWORD_LENGTH} characters`
       )
-      .matches(/[a-z]/, 'Password must contain a lowercase letter')
-      .matches(/[A-Z]/, 'Password must contain an uppercase letter')
       .matches(/[a-zа-я]/, 'Password must contain a lowercase letter')
       .matches(/[A-ZА-Я]/, 'Password must contain an uppercase letter')
       .matches(/[0-9]/, 'Password must contain a number')
