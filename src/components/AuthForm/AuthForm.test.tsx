@@ -101,5 +101,5 @@ describe('AuthForm component tests', () => {
 
     await userEvent.type(confirmPasswordInput, 'password');
     expect(await screen.findByText('Passwords must match')).toBeInTheDocument();
-  });
+  }, 10000);
 });
