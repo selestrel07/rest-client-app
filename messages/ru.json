@@ -16,5 +16,9 @@
   },
   "Footer": {
     "developed by": "разработан"
+  },
+  "Header": {
+    "main": "Главная",
+    "signout": "Выход"
   }
 }

@@ -16,5 +16,9 @@
   },
   "Footer": {
     "developed by": "developed by"
+  },
+  "Header": {
+    "main": "Main",
+    "signout": "Sign out"
   }
 }
