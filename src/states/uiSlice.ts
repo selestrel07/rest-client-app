@@ -23,8 +23,11 @@ const uiSlice = createSlice({
     signOut(state) {
       state.isAuthenticated = false;
     },
+    signIn(state) {
+      state.isAuthenticated = true;
+    },
   },
 });
 
-export const { toggleLocale, setLocale, signOut } = uiSlice.actions;
+export const { toggleLocale, setLocale, signOut, signIn } = uiSlice.actions;
 export default uiSlice.reducer;

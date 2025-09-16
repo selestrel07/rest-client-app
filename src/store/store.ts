@@ -1,11 +1,21 @@
-import { configureStore } from '@reduxjs/toolkit';
-import uiReducer from '../states/uiSlice';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import uiReducer from '@states/uiSlice';
+import toastReducer from '@states/toastSlice';
 
-export const store = configureStore({
-  reducer: {
-    ui: uiReducer,
-  },
+const rootReducer = combineReducers({
+  ui: uiReducer,
+  toast: toastReducer,
 });
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export const createStore = (
+  preloadedState?: Partial<ReturnType<typeof rootReducer>>
+) => {
+  return configureStore({
+    reducer: rootReducer,
+    preloadedState,
+  });
+};
+
+export type AppStore = ReturnType<typeof createStore>;
+export type AppDispatch = AppStore['dispatch'];
+export type RootState = ReturnType<AppStore['getState']>;

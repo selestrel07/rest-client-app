@@ -19,7 +19,9 @@
   },
   "Header": {
     "main": "Main",
-    "signout": "Sign out"
+    "signout": "Sign out",
+    "signin": "Sign in",
+    "signup": "Sugn up"
   },
   "AuthForm": {
     "email": "Email:",
