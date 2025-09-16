@@ -9,3 +9,6 @@ export * from './Toast/Toast';
 export * from './RestClient/RestClient';
 export * from './Header/Header';
 export * from './LanguageToggle/LanguageToggle';
+export * from './BodyEditor/BodyEditor';
+export * from './EndpointInput/EndpointInput';
+export * from './HeadersEditor/HeadersEditor';
