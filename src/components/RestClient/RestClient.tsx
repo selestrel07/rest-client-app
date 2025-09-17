@@ -1,4 +1,5 @@
 'use client';
+
 import { FC, useState, useEffect } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { convertUrlToRequest } from '@utils/requestUrlConverter';
@@ -17,7 +18,6 @@ export const RestClient: FC = () => {
 
   const [method, setMethod] = useState<string>(initialRequest.method || 'GET');
   const [endpoint, setEndpoint] = useState<string>(initialRequest.url || '');
-
   const [headers, setHeaders] = useState<{ key: string; value: string }[]>(
     Object.entries(initialRequest.headers || {}).map(([key, value]) => ({
       key,
@@ -25,24 +25,47 @@ export const RestClient: FC = () => {
     }))
   );
   const [body, setBody] = useState<string>(initialRequest.body || '');
+  const [isJson, setIsJson] = useState<boolean>(true);
   const [response, setResponse] = useState<APIResponse>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const newRequest = convertUrlToRequest(params, searchParams);
-    if (newRequest.url && newRequest.url !== endpoint) {
+    if (newRequest.url && newRequest.url !== endpoint)
       setEndpoint(newRequest.url);
-    }
-    if (newRequest.method && newRequest.method !== method) {
+    if (newRequest.method && newRequest.method !== method)
       setMethod(newRequest.method);
-    }
-    if (newRequest.body !== undefined && newRequest.body !== body) {
+    if (newRequest.body !== undefined && newRequest.body !== body)
       setBody(newRequest.body);
-    }
   }, [params, searchParams]);
 
+  const isValidUrl = (string: string): boolean => {
+    try {
+      new URL(string);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const isBodyValid =
+    !isJson ||
+    body === '' ||
+    (() => {
+      try {
+        if (!body.trim()) return true;
+        JSON.parse(body);
+        return true;
+      } catch {
+        return false;
+      }
+    })();
+
+  const isEndpointValid = !endpoint || isValidUrl(endpoint);
+  const canSend = !!endpoint && isEndpointValid && isBodyValid;
+
   const handleSubmit = async () => {
-    if (!endpoint.trim()) return;
+    if (!canSend || isLoading) return;
 
     setIsLoading(true);
     try {
@@ -73,29 +96,50 @@ export const RestClient: FC = () => {
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       <h1 className="text-2xl font-bold text-gray-800">REST Client</h1>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         <MethodSelector value={method} onChange={setMethod} />
+
         <EndpointInput value={endpoint} onChange={setEndpoint} />
+
         <HeadersEditor
           headers={headers}
           onAdd={(key, value) => setHeaders([...headers, { key, value }])}
         />
-        <BodyEditor value={body} onChange={setBody} />
+
+        <BodyEditor
+          value={body}
+          onChange={setBody}
+          isJson={isJson}
+          onModeChange={setIsJson}
+        />
+
         <button
           onClick={handleSubmit}
-          disabled={isLoading || !endpoint}
-          className="px-4 py-2 bg-violet-500 text-white rounded hover:bg-violet-600 disabled:opacity-50 transition-colors"
+          disabled={!canSend || isLoading}
+          className={`px-4 py-2 rounded transition-colors ${
+            !canSend || isLoading
+              ? 'bg-gray-300 cursor-not-allowed text-gray-500'
+              : 'bg-violet-500 hover:bg-violet-600 text-white'
+          }`}
         >
           {isLoading ? 'Sending...' : 'Send Request'}
         </button>
-      </div>
 
-      {response && (
-        <div className="mt-8 p-4 border border-gray-300 rounded bg-gray-50">
-          <h2 className="text-lg font-semibold mb-2 text-gray-700">Response</h2>
-          <ResponseViewer data={response} />
-        </div>
-      )}
+        {!isBodyValid && isJson && body && (
+          <p className="text-red-500 text-sm">
+            Invalid JSON in body. Fix syntax to send.
+          </p>
+        )}
+
+        {response && (
+          <div className="mt-6 p-4 border border-violet-700 rounded bg-violet-50">
+            <h2 className="text-lg font-semibold mb-2 text-gray-700">
+              Response
+            </h2>
+            <ResponseViewer data={response} />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

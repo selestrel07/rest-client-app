@@ -40,7 +40,7 @@ export function ResponseViewer({ data }: { data: APIResponse }) {
     return (
       <div className="space-y-2">
         <div className="text-sm text-gray-600">Status: {data.status}</div>
-        <pre className="p-4 bg-gray-100 rounded overflow-auto text-sm whitespace-pre-wrap">
+        <pre className="p-4 bg-violet-100 rounded overflow-auto text-sm whitespace-pre-wrap">
           {typeof data.data === 'object'
             ? JSON.stringify(data.data, null, 2)
             : String(data.data)}
