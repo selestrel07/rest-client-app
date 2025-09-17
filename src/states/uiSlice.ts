@@ -12,15 +12,6 @@ const initialState: UiState = {
   user: null,
 };
 
-// it's for checking authentificated user (fake user)
-// need delete it
-
-// const initialState: UiState = {
-//   locale: 'en',
-//   isAuthenticated: true,
-//   user: { uid: '123', email: 'test@example.com' },
-// };
-
 const uiSlice = createSlice({
   name: 'ui',
   initialState,
