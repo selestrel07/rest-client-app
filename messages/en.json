@@ -35,5 +35,8 @@
       "requiredConfirm": "Confirm password",
       "matchPasswords": "Passwords must match"
     }
+  "Header": {
+    "main": "Main",
+    "signout": "Sign out"
   }
 }

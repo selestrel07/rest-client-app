@@ -28,8 +28,11 @@
       "@components": ["./components/index.ts"],
       "@utils/*": ["./utils/*"],
       "@i18n/*": ["./i18n/*"],
+      "@messages/*": ["./messages/*"],
       "@data/*": ["./data/*"],
-      "@types": ["./types/index.ts"]
+      "@types": ["./types/index.ts"],
+      "states/*": ["states/*"],
+      "store/*": ["store/*"]
     },
     "types": ["vitest/globals", "@testing-library/jest-dom"]
   },

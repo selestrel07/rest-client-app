@@ -35,5 +35,8 @@
       "requiredConfirm": "Необходимо подтвердить пароль",
       "matchPasswords": "Пароли не совпадают"
     }
+  "Header": {
+    "main": "Главная",
+    "signout": "Выход"
   }
 }
