@@ -1,14 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export interface UserData {
-  uid: string;
-  email: string | null;
-}
-
 export interface UiState {
   locale: 'en' | 'ru';
   isAuthenticated: boolean;
-  user: UserData | null;
+  user: string | null;
 }
 
 const initialState: UiState = {
@@ -36,7 +31,7 @@ const uiSlice = createSlice({
     setLocale(state, action: PayloadAction<'en' | 'ru'>) {
       state.locale = action.payload;
     },
-    signIn(state, action: PayloadAction<UserData>) {
+    signIn(state, action: PayloadAction<string>) {
       state.isAuthenticated = true;
       state.user = action.payload;
     },

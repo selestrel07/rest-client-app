@@ -8,7 +8,7 @@ import { signOut } from 'states/uiSlice';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { removeAuthCookie } from '@actions/auth-actions';
-import { setValue } from '@states/toastSlice';
+import { setToastValue } from '@states/toastSlice';
 import { routesList } from '@data/routes-list';
 import { useRouter } from '@i18n/navigation';
 import { useAppDispatch, useAppSelector } from '../../hooks/useAppStore';
@@ -35,14 +35,14 @@ export const Header: FC<{ locale: 'en' | 'ru' }> = ({ locale }) => {
     try {
       await removeAuthCookie();
       dispatch(
-        setValue({
+        setToastValue({
           message: 'Logged out',
           type: 'success',
         })
       );
     } catch {
       dispatch(
-        setValue({
+        setToastValue({
           message: 'Something went wrong',
           type: 'error',
         })

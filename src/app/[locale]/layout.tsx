@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation';
 import { ReduxProvider } from 'store/Providers';
 import '../global.css';
 import { ToastWrapper } from '@components';
-import { isAuthenticated } from '@actions/auth-actions';
+import { getCookie, isAuthenticated } from '@actions/auth-actions';
 
 export const metadata: Metadata = {
   title: 'Yagni Rest Client App',
@@ -29,6 +29,7 @@ export default async function RootLayout({
   }
 
   const userLoggedIn = await isAuthenticated();
+  const user = await getCookie('userEmail');
 
   return (
     <html lang={locale}>
@@ -36,7 +37,11 @@ export default async function RootLayout({
         <ErrorBoundary fallback={<FallbackUI />}>
           <ReduxProvider
             preloadedState={{
-              ui: { locale, isAuthenticated: userLoggedIn },
+              ui: {
+                locale,
+                isAuthenticated: userLoggedIn,
+                user: user,
+              },
             }}
           >
             <NextIntlClientProvider>

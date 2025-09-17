@@ -9,11 +9,12 @@ const toastSlice = createSlice({
   name: 'toast',
   initialState,
   reducers: {
-    setValue: (_state, action: PayloadAction<ToastState>) => action.payload,
+    setToastValue: (_state, action: PayloadAction<ToastState>) =>
+      action.payload,
     clearValue: () => null,
   },
 });
 
-export const { setValue, clearValue } = toastSlice.actions;
+export const { setToastValue, clearValue } = toastSlice.actions;
 
 export default toastSlice.reducer;

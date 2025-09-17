@@ -8,6 +8,7 @@ import { cookies } from 'next/headers';
 import { User } from '@firebase/auth';
 import { UserAuth } from '@types';
 import { getToken } from '@utils/getAuthToken';
+import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 
 export async function loginUser({ email, password }: UserAuth) {
   return await processUserAuth(() =>
@@ -25,7 +26,7 @@ export async function processUserAuth(func: () => Promise<User | undefined>) {
   try {
     const user = await func();
     if (user) {
-      await addAuthCookie(user);
+      await addUserCookies(user);
     }
     return { success: true };
   } catch (error) {
@@ -47,12 +48,27 @@ export async function isAuthenticated(): Promise<boolean> {
   return getToken(cookieStore) !== undefined;
 }
 
-async function addAuthCookie(user: User) {
+async function addUserCookies(user: User) {
   const cookieStore = await cookies();
+  addCookie(cookieStore, 'userUid', user.uid);
+  addCookie(cookieStore, 'userEmail', user.email ?? '');
   user.getIdToken(false).then((idToken) => {
-    cookieStore.set('authToken', idToken, {
-      httpOnly: true,
-      maxAge: 3600,
-    });
+    addCookie(cookieStore, 'authToken', idToken);
+  });
+}
+
+export async function getCookie(name: string) {
+  const cookieStore = await cookies();
+  return cookieStore.get(name)?.value ?? '';
+}
+
+function addCookie(
+  cookieStore: ReadonlyRequestCookies,
+  name: string,
+  value: string
+) {
+  cookieStore.set(name, value, {
+    httpOnly: true,
+    maxAge: 3600,
   });
 }

@@ -1,25 +1,42 @@
 import type { Metadata } from 'next';
-import { useLocale, useTranslations } from 'next-intl';
-import './global.css';
+import { NextIntlClientProvider } from 'next-intl';
 import { Footer } from '@components';
 import { Header } from '@components';
+import { ReduxProvider } from '@store/Providers';
+import { isAuthenticated } from '@actions/auth-actions';
+import './global.css';
+import { NotFound } from '../components/NotFound/NotFound';
 
 export const metadata: Metadata = {
   title: '404 - Page Not Found',
   description: 'Page Not Found',
 };
 
-export default function NotFound() {
-  const t = useTranslations('NotFoundPage');
-  const locale = useLocale() as 'en' | 'ru';
+export default async function NotFoundPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const userLoggedIn = await isAuthenticated();
+  const { locale } = await params;
   return (
     <html>
       <body>
-        <Header locale={locale} />
-        <div className="flex items-center justify-center w-full min-h-[calc(100vh-36px)] bg-violet-50">
-          {t('text')}
-        </div>
-        <Footer />
+        <NextIntlClientProvider>
+          <ReduxProvider
+            preloadedState={{
+              ui: {
+                locale: locale as 'en' | 'ru',
+                isAuthenticated: userLoggedIn,
+                user: '',
+              },
+            }}
+          >
+            <Header locale={locale as 'en' | 'ru'} />
+            <NotFound />
+            <Footer />
+          </ReduxProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );
