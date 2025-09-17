@@ -32,7 +32,8 @@
       "@data/*": ["./data/*"],
       "@types": ["./types/index.ts"],
       "states/*": ["states/*"],
-      "store/*": ["store/*"]
+      "store/*": ["store/*"],
+      "@services/*": ["./services/*"]
     },
     "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
