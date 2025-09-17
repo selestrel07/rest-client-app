@@ -1,15 +1,18 @@
+import { useTranslations } from 'next-intl';
+
 interface EndpointInputProps {
   value: string;
   onChange: (value: string) => void;
 }
 
 export function EndpointInput({ value, onChange }: EndpointInputProps) {
+  const t = useTranslations('RestClient');
+
   const isValid = value === '' || isValidUrl(value);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
-
   return (
     <div className="space-y-2">
       <label className="block text-sm font-medium text-gray-700">
@@ -29,9 +32,7 @@ export function EndpointInput({ value, onChange }: EndpointInputProps) {
         }`}
       />
       {value && !isValid && (
-        <p className="text-red-500 text-xs">
-          Please enter a valid URL (e.g. https://example.com)
-        </p>
+        <p className="text-red-500 text-xs"> {t('error')}</p>
       )}
     </div>
   );

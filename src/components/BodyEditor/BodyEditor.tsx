@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 interface BodyEditorProps {
@@ -15,6 +16,8 @@ export function BodyEditor({
   isJson,
   onModeChange,
 }: BodyEditorProps) {
+  const t = useTranslations('RestClient');
+
   const [error, setError] = useState<string | null>(null);
 
   const handlePrettify = () => {
@@ -70,7 +73,7 @@ export function BodyEditor({
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Enter request body..."
+        placeholder={t('text')}
         className="w-full px-3 py-2 border border-violet-700 rounded h-32 resize-none font-mono text-sm"
       />
 

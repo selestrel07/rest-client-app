@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface HeadersEditorProps {
   headers: { key: string; value: string }[];
@@ -8,6 +9,8 @@ interface HeadersEditorProps {
 }
 
 export function HeadersEditor({ headers, onAdd }: HeadersEditorProps) {
+  const t = useTranslations('RestClient');
+
   const [key, setKey] = useState('');
   const [value, setValue] = useState('');
 
@@ -42,7 +45,7 @@ export function HeadersEditor({ headers, onAdd }: HeadersEditorProps) {
             onClick={handleAdd}
             className="px-3 py-2 bg-violet-500 text-violet-950 rounded hover:bg-violet-600"
           >
-            Add
+            {t('button')}
           </button>
         </div>
         <ul className="mt-2 space-y-1">

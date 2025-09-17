@@ -8,10 +8,12 @@ import { EndpointInput } from '@components';
 import { HeadersEditor } from '@components';
 import { BodyEditor } from '@components';
 import { ResponseViewer } from '@components';
+import { useTranslations } from 'next-intl';
 
 type APIResponse = { error: string } | { status: number; data: unknown } | null;
 
 export const RestClient: FC = () => {
+  const t = useTranslations('RestClient');
   const params = useParams();
   const searchParams = useSearchParams();
   const initialRequest = convertUrlToRequest(params, searchParams);
@@ -94,12 +96,15 @@ export const RestClient: FC = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-gray-800">REST Client</h1>
+      <h1 className="text-2xl font-bold text-gray-800">{t('title')}</h1>
 
       <div className="space-y-6">
         <MethodSelector value={method} onChange={setMethod} />
 
-        <EndpointInput value={endpoint} onChange={setEndpoint} />
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2"></label>
+          <EndpointInput value={endpoint} onChange={setEndpoint} />
+        </div>
 
         <HeadersEditor
           headers={headers}
@@ -113,6 +118,10 @@ export const RestClient: FC = () => {
           onModeChange={setIsJson}
         />
 
+        {!isBodyValid && isJson && body && (
+          <p className="text-red-500 text-sm">{t('invalidJson')}</p>
+        )}
+
         <button
           onClick={handleSubmit}
           disabled={!canSend || isLoading}
@@ -122,19 +131,13 @@ export const RestClient: FC = () => {
               : 'bg-violet-500 hover:bg-violet-600 text-white'
           }`}
         >
-          {isLoading ? 'Sending...' : 'Send Request'}
+          {isLoading ? '...' : t('sendRequest')}
         </button>
-
-        {!isBodyValid && isJson && body && (
-          <p className="text-red-500 text-sm">
-            Invalid JSON in body. Fix syntax to send.
-          </p>
-        )}
 
         {response && (
           <div className="mt-6 p-4 border border-violet-700 rounded bg-violet-50">
             <h2 className="text-lg font-semibold mb-2 text-gray-700">
-              Response
+              {t('response')}
             </h2>
             <ResponseViewer data={response} />
           </div>
