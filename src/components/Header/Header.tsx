@@ -52,7 +52,10 @@ export const Header: FC = () => {
       <nav>
         <ul className="flex gap-4 items-center">
           <li>
-            <Link href="/" className="text-lg">
+            <Link
+              href="/"
+              className="text-lg px-4 py-2 rounded bg-violet-600 hover:bg-violet-500 transition"
+            >
               {t('main')}
             </Link>
           </li>
@@ -61,7 +64,7 @@ export const Header: FC = () => {
             <li>
               <button
                 onClick={() => dispatch(signOut())}
-                className="px-3 py-1 rounded bg-violet-600 hover:bg-violet-500 transition"
+                className="text-lg px-3 py-1 rounded bg-violet-600 hover:bg-violet-500 transition"
               >
                 {t('signout')}
               </button>
