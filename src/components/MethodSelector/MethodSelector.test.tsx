@@ -29,6 +29,6 @@ describe('MethodSelector', () => {
     render(<MethodSelector value="POST" onChange={onChange} />);
 
     const postButton = screen.getByText('POST').closest('button');
-    expect(postButton).toHaveClass('bg-blue-500');
+    expect(postButton).toHaveClass('bg-violet-500');
   });
 });
