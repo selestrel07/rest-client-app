@@ -12,7 +12,7 @@ export function EndpointInput({ value, onChange }: EndpointInputProps) {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="https://api.example.com/users"
-        className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full px-3 py-2 border border-violet-700 rounded focus:outline-none focus:border-violet-700"
       />
     </div>
   );

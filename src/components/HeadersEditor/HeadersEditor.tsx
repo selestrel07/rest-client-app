@@ -29,18 +29,18 @@ export function HeadersEditor({ headers, onAdd }: HeadersEditorProps) {
             placeholder="Key"
             value={key}
             onChange={(e) => setKey(e.target.value)}
-            className="flex-1 px-3 py-2 border rounded"
+            className="flex-1 px-3 py-2 border border-violet-700 rounded focus:outline-none focus:border-violet-700"
           />
           <input
             type="text"
             placeholder="Value"
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            className="flex-1 px-3 py-2 border rounded"
+            className="flex-1 px-3 py-2 border border-violet-700 rounded focus:outline-none focus:border-violet-700"
           />
           <button
             onClick={handleAdd}
-            className="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+            className="px-3 py-2 bg-violet-500 text-violet-950 rounded hover:bg-violet-600"
           >
             Add
           </button>
@@ -49,7 +49,7 @@ export function HeadersEditor({ headers, onAdd }: HeadersEditorProps) {
           {headers.map((h, i) => (
             <li
               key={i}
-              className="flex justify-between items-center bg-gray-100 p-2 rounded"
+              className="flex justify-between items-center bg-violet-100 p-2 rounded"
             >
               <span>{h.key}</span>
               <span className="font-mono">{h.value}</span>

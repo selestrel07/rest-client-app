@@ -16,7 +16,7 @@ export function MethodSelector({ value, onChange }: MethodSelectorProps) {
             onClick={() => onChange(m)}
             className={`px-3 py-1 rounded border ${
               value === m
-                ? 'bg-blue-500 text-white border-blue-500'
+                ? 'bg-violet-500 text-violet-950 border-violet-700'
                 : 'border-gray-300 hover:bg-gray-100'
             }`}
           >

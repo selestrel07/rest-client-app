@@ -37,14 +37,14 @@ export function BodyEditor({ value, onChange }: BodyEditorProps) {
         <button
           type="button"
           onClick={() => setIsJson(true)}
-          className={`px-2 py-1 text-sm ${isJson ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+          className={`px-2 py-1 text-sm ${isJson ? 'bg-violet-500 text-violet-950' : 'bg-gray-200'}`}
         >
           JSON
         </button>
         <button
           type="button"
           onClick={() => setIsJson(false)}
-          className={`px-2 py-1 text-sm ${!isJson ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+          className={`px-2 py-1 text-sm ${!isJson ? 'bg-violet-500 text-violet-950' : 'bg-gray-200'}`}
         >
           Text
         </button>
@@ -61,7 +61,7 @@ export function BodyEditor({ value, onChange }: BodyEditorProps) {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Enter request body..."
-        className="w-full px-3 py-2 border rounded h-32 resize-none font-mono text-sm"
+        className="w-full px-3 py-2 border border-violet-700 rounded focus:outline-none focus:border-violet-700 h-32 resize-none font-mono text-sm"
       />
 
       {error && <p className="text-red-500 text-xs mt-1">{error}</p>}

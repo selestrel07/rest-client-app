@@ -60,7 +60,7 @@ export default function RestPage() {
         <button
           onClick={handleSubmit}
           disabled={isLoading || !endpoint}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+          className="px-4 py-2 bg-violet-500 text-violet-950 rounded hover:bg-violet-600 disabled:opacity-50"
         >
           {isLoading ? 'Sending...' : 'Send Request'}
         </button>
