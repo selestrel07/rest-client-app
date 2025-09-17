@@ -6,6 +6,7 @@ export * from './CodeGenerator/ButtonCopy';
 export * from './ErrorBoundary/ErrorBoundary';
 export * from './FallBackUI/FallBackUI';
 export * from './Toast/Toast';
+export * from './AuthForm/AuthForm';
 export * from './RestClient/RestClient';
 export * from './Header/Header';
 export * from './LanguageToggle/LanguageToggle';
