@@ -1,6 +1,12 @@
 {
   "MainPage": {
-    "text": "This is main page"
+    "welcome": "Welcome!",
+    "welcomeBack": "Welcome back, {user}!",
+    "signin": "Sign In",
+    "signup": "Sign Up",
+    "rest": "REST Client",
+    "history": "History",
+    "variables": "Variables"
   },
   "SignInPage": {
     "text": "This is Sign In page"
