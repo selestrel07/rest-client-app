@@ -7,7 +7,7 @@ interface HeadersEditorProps {
   onAdd: (key: string, value: string) => void;
 }
 
-export default function HeadersEditor({ headers, onAdd }: HeadersEditorProps) {
+export function HeadersEditor({ headers, onAdd }: HeadersEditorProps) {
   const [key, setKey] = useState('');
   const [value, setValue] = useState('');
 

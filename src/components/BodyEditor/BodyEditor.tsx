@@ -7,7 +7,7 @@ interface BodyEditorProps {
   onChange: (value: string) => void;
 }
 
-export default function BodyEditor({ value, onChange }: BodyEditorProps) {
+export function BodyEditor({ value, onChange }: BodyEditorProps) {
   const [isJson, setIsJson] = useState(true);
 
   const handlePrettify = () => {

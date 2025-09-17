@@ -27,7 +27,7 @@ function isSuccessResponse(data: unknown): data is SuccessResponse {
   );
 }
 
-export default function ResponseViewer({ data }: { data: APIResponse }) {
+export function ResponseViewer({ data }: { data: APIResponse }) {
   if (isErrorResponse(data)) {
     return (
       <pre className="text-red-500 p-4 bg-red-50 rounded whitespace-pre-wrap">

@@ -3,10 +3,7 @@ interface MethodSelectorProps {
   onChange: (method: string) => void;
 }
 
-export default function MethodSelector({
-  value,
-  onChange,
-}: MethodSelectorProps) {
+export function MethodSelector({ value, onChange }: MethodSelectorProps) {
   const methods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'];
 
   return (

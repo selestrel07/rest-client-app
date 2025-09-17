@@ -3,7 +3,7 @@ interface EndpointInputProps {
   onChange: (value: string) => void;
 }
 
-export default function EndpointInput({ value, onChange }: EndpointInputProps) {
+export function EndpointInput({ value, onChange }: EndpointInputProps) {
   return (
     <div>
       <label className="block mb-1 font-medium">Endpoint</label>
