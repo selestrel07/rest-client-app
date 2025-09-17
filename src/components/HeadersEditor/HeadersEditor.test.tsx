@@ -1,6 +1,15 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { HeadersEditor } from '@components';
 
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string) => {
+    const messages: Record<string, string> = {
+      button: 'Add',
+    };
+    return messages[key] || key;
+  },
+}));
+
 describe('HeadersEditor', () => {
   const onAdd = vi.fn();
 
@@ -54,5 +63,19 @@ describe('HeadersEditor', () => {
 
     expect(screen.getByText('Content-Type')).toBeInTheDocument();
     expect(screen.getByText('application/json')).toBeInTheDocument();
+  });
+
+  it('clears input fields after adding header', () => {
+    render(<HeadersEditor headers={[]} onAdd={onAdd} />);
+
+    const keyInput = screen.getByPlaceholderText('Key');
+    const valueInput = screen.getByPlaceholderText('Value');
+
+    fireEvent.change(keyInput, { target: { value: 'X-API-Key' } });
+    fireEvent.change(valueInput, { target: { value: 'abc123' } });
+    fireEvent.click(screen.getByText('Add'));
+
+    expect(keyInput).toHaveValue('');
+    expect(valueInput).toHaveValue('');
   });
 });

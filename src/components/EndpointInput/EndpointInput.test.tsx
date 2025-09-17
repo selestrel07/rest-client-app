@@ -1,6 +1,15 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { EndpointInput } from '@components';
 
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string) => {
+    const messages: Record<string, string> = {
+      error: 'Please enter a valid URL',
+    };
+    return messages[key] || key;
+  },
+}));
+
 describe('EndpointInput', () => {
   const onChange = vi.fn();
 
@@ -31,5 +40,22 @@ describe('EndpointInput', () => {
 
     const input = screen.getByDisplayValue('https://my-api.com/data');
     expect(input).toBeInTheDocument();
+  });
+
+  it('shows green border for valid URL', () => {
+    render(<EndpointInput value="https://example.com" onChange={onChange} />);
+
+    const input = screen.getByDisplayValue('https://example.com');
+    expect(input).toHaveClass('border-green-500');
+  });
+
+  it('has no error and gray border when empty', () => {
+    render(<EndpointInput value="" onChange={onChange} />);
+
+    const input = screen.getByPlaceholderText('https://api.example.com/users');
+    expect(input).toHaveClass('border-gray-300');
+
+    const error = screen.queryByText('Please enter a valid URL');
+    expect(error).not.toBeInTheDocument();
   });
 });

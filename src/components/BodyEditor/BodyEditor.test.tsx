@@ -1,6 +1,15 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BodyEditor } from '@components';
 
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string) => {
+    const messages: Record<string, string> = {
+      text: 'Enter request body...',
+    };
+    return messages[key] || key;
+  },
+}));
+
 describe('BodyEditor', () => {
   const onChange = vi.fn();
   const onModeChange = vi.fn();
