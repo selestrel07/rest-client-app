@@ -34,9 +34,10 @@
       "specialPassword": "Password must contain a special character",
       "requiredConfirm": "Confirm password",
       "matchPasswords": "Passwords must match"
+    },
+    "Header": {
+      "main": "Main",
+      "signout": "Sign out"
     }
-  "Header": {
-    "main": "Main",
-    "signout": "Sign out"
   }
 }
