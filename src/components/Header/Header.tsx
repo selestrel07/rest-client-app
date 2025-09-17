@@ -13,7 +13,7 @@ import Link from 'next/link';
 export const Header: FC = () => {
   const [scrolled, setScrolled] = useState(false);
 
-  const t = useTranslations('Header');
+  const t = useTranslations('AuthForm.Header');
 
   const dispatch = useDispatch<AppDispatch>();
 
