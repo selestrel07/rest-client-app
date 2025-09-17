@@ -21,7 +21,7 @@
     "main": "Main",
     "signout": "Sign out",
     "signin": "Sign in",
-    "signup": "Sugn up"
+    "signup": "Sign up"
   },
   "AuthForm": {
     "email": "Email:",
