@@ -36,6 +36,7 @@ export function generateCode(language: string, request: RequestType) {
 
 function generateCurl(request: RequestType) {
   let code = 'curl --location';
+
   const headers = request.headers
     ? ` \\${composeHeaders(`--header 'key: value'`, request.headers, ' \\')}`
     : '';
