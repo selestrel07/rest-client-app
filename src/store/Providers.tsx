@@ -1,8 +1,18 @@
 'use client';
 
 import { Provider } from 'react-redux';
-import { store } from './store';
+import { ReactNode, useMemo } from 'react';
+import { createStore } from '@store/store';
 
-export function ReduxProvider({ children }: { children: React.ReactNode }) {
+interface ReduxProviderProps {
+  children: ReactNode;
+  preloadedState?: Parameters<typeof createStore>[0];
+}
+
+export function ReduxProvider({
+  children,
+  preloadedState,
+}: ReduxProviderProps) {
+  const store = useMemo(() => createStore(preloadedState), []);
   return <Provider store={store}>{children}</Provider>;
 }

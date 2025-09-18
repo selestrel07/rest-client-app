@@ -1,4 +1,5 @@
 import { redirectIfAuthenticated } from '@utils/redirects';
+import { AuthForm } from '@components';
 
 export default async function SignInPage({
   params,
@@ -8,5 +9,5 @@ export default async function SignInPage({
   const { locale } = await params;
   await redirectIfAuthenticated(locale);
 
-  return <div>{'text'}</div>;
+  return <AuthForm />;
 }
