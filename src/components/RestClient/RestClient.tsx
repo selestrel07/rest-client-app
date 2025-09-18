@@ -9,6 +9,8 @@ import { HeadersEditor } from '@components';
 import { BodyEditor } from '@components';
 import { ResponseViewer } from '@components';
 import { useTranslations } from 'next-intl';
+import { useRouter } from '@i18n/navigation';
+import { buildRestUrl } from '@utils/buildRestUrl';
 
 type APIResponse = { error: string } | { status: number; data: unknown } | null;
 
@@ -30,6 +32,27 @@ export const RestClient: FC = () => {
   const [isJson, setIsJson] = useState<boolean>(true);
   const [response, setResponse] = useState<APIResponse>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const headersObject = headers.reduce(
+      (acc, h) => {
+        if (h.key) acc[h.key] = h.value;
+        return acc;
+      },
+      {} as Record<string, string>
+    );
+
+    const newUrl = buildRestUrl({
+      method,
+      url: endpoint,
+      body,
+      headers: headersObject,
+    });
+
+    router.replace(newUrl);
+  }, [method, endpoint, body, headers, router]);
 
   useEffect(() => {
     const newRequest = convertUrlToRequest(params, searchParams);

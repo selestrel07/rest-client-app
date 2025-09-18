@@ -1,27 +1,30 @@
 import { CodeGenerator } from '@components';
-import dynamic from 'next/dynamic';
+import { decodeBase64, parseQuery } from '@utils/urlEncoding';
 
-const RestClientLazy = dynamic(
-  () =>
-    import('../../../../../components/RestClient/RestClient').then(
-      (m) => m.RestClient
-    ),
-  { loading: () => <p>Loading...</p> }
-);
+export default function RestPage({
+  params,
+  searchParams,
+}: {
+  params: { method: string; requestpart?: string[] };
+  searchParams: Record<string, string>;
+}) {
+  const { method, requestpart = [] } = params;
 
-export default function RestClientPage() {
+  const [urlBase64, bodyBase64] = requestpart;
+
+  const url = decodeBase64(urlBase64);
+  const body = decodeBase64(bodyBase64);
+
+  const headers = parseQuery(new URLSearchParams(searchParams).toString());
+
   return (
     <div className="flex justify-end w-full">
-      <RestClientLazy />
       <CodeGenerator
         request={{
-          method: 'GET',
-          url: 'http://localhost:3000/',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: '{"language": "curl","url": "http://localhost:3000/","headers": {"Accept": "application/json"}}',
+          method: method.toUpperCase(),
+          url,
+          headers,
+          body,
         }}
       />
     </div>
