@@ -24,7 +24,7 @@ export function HeadersEditor({ headers, onAdd }: HeadersEditorProps) {
 
   return (
     <div>
-      <label className="block mb-1 font-medium">Headers</label>
+      <label className="block mb-1 font-medium">{t('headers')}</label>
       <div className="flex flex-col gap-2">
         <div className="flex gap-2">
           <input
@@ -43,7 +43,7 @@ export function HeadersEditor({ headers, onAdd }: HeadersEditorProps) {
           />
           <button
             onClick={handleAdd}
-            className="px-3 py-2 bg-violet-500 text-violet-950 rounded hover:bg-violet-600"
+            className="px-3 py-2 bg-violet-500 text-white rounded hover:bg-violet-600 cursor-pointer transition-all duration-300"
           >
             {t('button')}
           </button>
