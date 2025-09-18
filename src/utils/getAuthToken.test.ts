@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getAuthToken } from './getAuthToken.ts';
+import { getAuthToken } from './getAuthToken';
 
 const mockRequest = (cookieHeader?: string) => {
   return {

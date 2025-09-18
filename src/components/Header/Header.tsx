@@ -1,25 +1,26 @@
 'use client';
 
 import { LanguageToggle } from '@components';
-import type { FC } from 'react';
+import { FC, Fragment } from 'react';
 import { useEffect, useState } from 'react';
 import { BiCool } from 'react-icons/bi';
-import { useDispatch, useSelector } from 'react-redux';
 import { signOut } from 'states/uiSlice';
-import type { AppDispatch, RootState } from 'store/store';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { removeAuthCookie } from '@actions/auth-actions';
+import { setToastValue } from '@states/toastSlice';
+import { routesList } from '@data/routes-list';
+import { useRouter } from '@i18n/navigation';
+import { useAppDispatch, useAppSelector } from '../../hooks/useAppStore';
 
-export const Header: FC = () => {
+export const Header: FC<{ locale: 'en' | 'ru' }> = ({ locale }) => {
   const [scrolled, setScrolled] = useState(false);
+  const router = useRouter();
 
   const t = useTranslations('Header');
+  const authenticated = useAppSelector((state) => state.ui.isAuthenticated);
 
-  const dispatch = useDispatch<AppDispatch>();
-
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.ui.isAuthenticated
-  );
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,6 +29,27 @@ export const Header: FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleSignOut = async () => {
+    dispatch(signOut());
+    try {
+      await removeAuthCookie();
+      dispatch(
+        setToastValue({
+          message: 'Logged out',
+          type: 'success',
+        })
+      );
+    } catch {
+      dispatch(
+        setToastValue({
+          message: 'Something went wrong',
+          type: 'error',
+        })
+      );
+    }
+    router.push({ pathname: routesList.main }, { locale });
+  };
 
   return (
     <header
@@ -43,29 +65,49 @@ export const Header: FC = () => {
             }`}
           />
         </Link>
-      </div>
-
-      <div>
         <LanguageToggle />
       </div>
 
       <nav>
         <ul className="flex gap-4 items-center">
-          <li>
-            <Link href="/" className="text-lg">
-              {t('main')}
-            </Link>
-          </li>
-
-          {isAuthenticated && (
-            <li>
-              <button
-                onClick={() => dispatch(signOut())}
-                className="px-3 py-1 rounded bg-violet-600 hover:bg-violet-500 transition"
-              >
-                {t('signout')}
-              </button>
-            </li>
+          {authenticated ? (
+            <Fragment>
+              <li>
+                <Link
+                  href={`/${locale}/${routesList.main}`}
+                  className="px-3 py-1 rounded bg-violet-600 hover:bg-violet-500 transition text-lg"
+                >
+                  {t('main')}
+                </Link>
+              </li>
+              <li>
+                <button
+                  onClick={handleSignOut}
+                  className="px-3 py-1 rounded bg-violet-600 hover:bg-violet-500 transition"
+                >
+                  {t('signout')}
+                </button>
+              </li>
+            </Fragment>
+          ) : (
+            <Fragment>
+              <li>
+                <Link
+                  href={`/${locale}/${routesList.login}`}
+                  className="px-3 py-1 rounded bg-violet-600 hover:bg-violet-500 transition text-lg"
+                >
+                  {t('signin')}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/${routesList.register}`}
+                  className="px-3 py-1 rounded bg-violet-600 hover:bg-violet-500 transition text-lg"
+                >
+                  {t('signup')}
+                </Link>
+              </li>
+            </Fragment>
           )}
         </ul>
       </nav>
