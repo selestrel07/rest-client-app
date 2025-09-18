@@ -63,5 +63,9 @@
       "requiredConfirm": "Необходимо подтвердить пароль",
       "matchPasswords": "Пароли не совпадают"
     }
+  },
+  "Messages" : {
+    "requestSuccess": "Запрос успешно обработан",
+    "requestError": "Ошибка выполнения запроса. Причина: {error}"
   }
 }

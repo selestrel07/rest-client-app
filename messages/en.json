@@ -63,5 +63,9 @@
       "requiredConfirm": "Confirm password",
       "matchPasswords": "Passwords must match"
     }
+  },
+  "Messages" : {
+    "requestSuccess": "Request processed successfully",
+    "requestError": "Failed to fetch. Reason: {error}"
   }
 }

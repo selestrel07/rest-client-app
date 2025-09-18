@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 interface HeadersEditorProps {
-  headers: { key: string; value: string }[];
+  headers: Record<string, string>;
   onAdd: (key: string, value: string) => void;
 }
 
@@ -49,13 +49,13 @@ export function HeadersEditor({ headers, onAdd }: HeadersEditorProps) {
           </button>
         </div>
         <ul className="mt-2 space-y-1">
-          {headers.map((h, i) => (
+          {Object.entries(headers).map(([key, value]) => (
             <li
-              key={i}
+              key={key}
               className="flex justify-between items-center bg-violet-100 p-2 rounded"
             >
-              <span>{h.key}</span>
-              <span className="font-mono">{h.value}</span>
+              <span>{key}</span>
+              <span className="font-mono">{value}</span>
             </li>
           ))}
         </ul>
