@@ -10,6 +10,12 @@ import { BodyEditor } from '@components';
 import { ResponseViewer } from '@components';
 import { useTranslations } from 'next-intl';
 
+type RequestHistory = {
+  method: string;
+  url: string;
+  timestamp: number;
+};
+
 type APIResponse = { error: string } | { status: number; data: unknown } | null;
 
 export const RestClient: FC = () => {
@@ -85,6 +91,17 @@ export const RestClient: FC = () => {
 
       const data = await res.json();
       setResponse({ status: res.status, data });
+
+      const newRequest: RequestHistory = {
+        method,
+        url: endpoint,
+        timestamp: Date.now(),
+      };
+
+      const saved = localStorage.getItem('requestHistory');
+      const history = saved ? JSON.parse(saved) : [];
+      history.unshift(newRequest);
+      localStorage.setItem('requestHistory', JSON.stringify(history));
     } catch (err) {
       setResponse({
         error: err instanceof Error ? err.message : 'Unknown error',

@@ -55,5 +55,11 @@
       "requiredConfirm": "Необходимо подтвердить пароль",
       "matchPasswords": "Пароли не совпадают"
     }
+  },
+
+  "History": {
+    "noRequests": "Вы ещё не выполнили запросы",
+    "restClient": "REST Клиент",
+    "history": "История запросов"
   }
 }

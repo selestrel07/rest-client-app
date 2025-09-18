@@ -56,5 +56,11 @@
       "requiredConfirm": "Confirm password",
       "matchPasswords": "Passwords must match"
     }
+  },
+
+  "History": {
+    "noRequests": "You have not yet executed requests",
+    "restClient": "REST Client",
+    "history": "History Requests"
   }
 }
