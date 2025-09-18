@@ -23,6 +23,12 @@
   "Footer": {
     "developed by": "developed by"
   },
+  "Header": {
+    "main": "Main",
+    "signout": "Sign out",
+    "signin": "Sign in",
+    "signup": "Sign up"
+  },
   "AuthForm": {
     "email": "Email:",
     "password": "Password:",
@@ -40,10 +46,6 @@
       "specialPassword": "Password must contain a special character",
       "requiredConfirm": "Confirm password",
       "matchPasswords": "Passwords must match"
-    },
-    "Header": {
-      "main": "Main",
-      "signout": "Sign out"
     }
   }
 }

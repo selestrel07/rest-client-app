@@ -23,6 +23,12 @@
   "Footer": {
     "developed by": "разработан"
   },
+  "Header": {
+    "main": "Главная",
+    "signout": "Выход",
+    "signin": "Войти",
+    "signup": "Зарегистрироваться"
+  },
   "AuthForm": {
     "email": "Электронная почта:",
     "password": "Пароль:",
@@ -40,10 +46,6 @@
       "specialPassword": "Пароль должен включать специальные символы",
       "requiredConfirm": "Необходимо подтвердить пароль",
       "matchPasswords": "Пароли не совпадают"
-    },
-    "Header": {
-      "main": "Главная",
-      "signout": "Выход"
     }
   }
 }

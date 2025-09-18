@@ -10,3 +10,4 @@ export * from './AuthForm/AuthForm';
 export * from './RestClient/RestClient';
 export * from './Header/Header';
 export * from './LanguageToggle/LanguageToggle';
+export * from './Toast/ToastWrapper';

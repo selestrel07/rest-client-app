@@ -1,15 +1,14 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { Footer } from '@components';
-import { Header } from '@components';
-import { ErrorBoundary } from '@components';
-import { FallbackUI } from '@components';
+import { Footer, Header, ErrorBoundary, FallbackUI } from '@components';
 import { NextIntlClientProvider } from 'next-intl';
 import { hasLocale } from 'use-intl';
 import { routing } from '@i18n/routing';
 import { notFound } from 'next/navigation';
 import { ReduxProvider } from 'store/Providers';
 import '../global.css';
+import { ToastWrapper } from '@components';
+import { getCookie, isAuthenticated } from '@actions/auth-actions';
 
 export const metadata: Metadata = {
   title: 'Yagni Rest Client App',
@@ -29,19 +28,31 @@ export default async function RootLayout({
     notFound();
   }
 
+  const userLoggedIn = await isAuthenticated();
+  const user = await getCookie('userEmail');
+
   return (
     <html lang={locale}>
       <body className="bg-violet-50">
         <ErrorBoundary fallback={<FallbackUI />}>
-          <ReduxProvider>
+          <ReduxProvider
+            preloadedState={{
+              ui: {
+                locale,
+                isAuthenticated: userLoggedIn,
+                user: user,
+              },
+            }}
+          >
             <NextIntlClientProvider>
-              <Header />
+              <Header locale={locale} />
               <div
                 id="root"
-                className="flex items-center justify-center w-screen min-h-[calc(100vh-36px)]"
+                className="relative flex items-center justify-center w-full min-h-[calc(100vh-116px)]"
               >
                 {children}
               </div>
+              <ToastWrapper />
               <Footer />
             </NextIntlClientProvider>
           </ReduxProvider>

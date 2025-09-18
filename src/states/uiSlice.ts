@@ -1,14 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export interface UserData {
-  uid: string;
-  email: string | null;
-}
-
 export interface UiState {
   locale: 'en' | 'ru';
   isAuthenticated: boolean;
-  user: UserData | null;
+  user: string | null;
 }
 
 const initialState: UiState = {
@@ -16,15 +11,6 @@ const initialState: UiState = {
   isAuthenticated: false,
   user: null,
 };
-
-// it's for checking authentificated user (fake user)
-// need delete it
-
-// const initialState: UiState = {
-//   locale: 'en',
-//   isAuthenticated: true,
-//   user: { uid: '123', email: 'test@example.com' },
-// };
 
 const uiSlice = createSlice({
   name: 'ui',
@@ -36,7 +22,7 @@ const uiSlice = createSlice({
     setLocale(state, action: PayloadAction<'en' | 'ru'>) {
       state.locale = action.payload;
     },
-    signIn(state, action: PayloadAction<UserData>) {
+    signIn(state, action: PayloadAction<string>) {
       state.isAuthenticated = true;
       state.user = action.payload;
     },
