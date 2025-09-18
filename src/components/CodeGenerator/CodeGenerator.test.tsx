@@ -4,6 +4,7 @@ import { CodeGenerator } from '@components';
 import { RequestType } from '@types';
 import { generateCode } from '@utils/generateCode';
 import { userEvent } from '@testing-library/user-event';
+import { NextIntlClientProvider } from 'next-intl';
 
 const request: RequestType = {
   method: 'GET',
@@ -15,6 +16,20 @@ const request: RequestType = {
   body: 'text',
 };
 
+const renderWithIntl = () =>
+  render(
+    <NextIntlClientProvider
+      locale="en"
+      messages={{
+        RestClient: {
+          copy: 'copy',
+        },
+      }}
+    >
+      <CodeGenerator request={request} />
+    </NextIntlClientProvider>
+  );
+
 const findElementWithCode = async (expectedCode: string) => {
   return await screen.findByText(
     (_, el) => el !== null && el.textContent === expectedCode
@@ -23,7 +38,7 @@ const findElementWithCode = async (expectedCode: string) => {
 
 describe('CodeGenerator component tests', () => {
   it('Should render correctly', async () => {
-    render(<CodeGenerator request={request} />);
+    renderWithIntl();
 
     expect(screen.getByText('curl')).toBeInTheDocument();
     await expect(
@@ -32,7 +47,7 @@ describe('CodeGenerator component tests', () => {
   });
 
   it('Should update code according to the selected language', async () => {
-    render(<CodeGenerator request={request} />);
+    renderWithIntl();
     const select = screen.getByRole('combobox');
 
     await userEvent.selectOptions(select, 'java');
@@ -48,7 +63,7 @@ describe('CodeGenerator component tests', () => {
       clipboard: { writeText: writeTextMock },
     });
 
-    render(<CodeGenerator request={request} />);
+    renderWithIntl();
     const copyButton = screen.getByTestId('button-copy');
     await userEvent.click(copyButton);
 
