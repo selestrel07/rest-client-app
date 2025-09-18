@@ -68,5 +68,9 @@
     "name": "Name: ",
     "value": "Value: ",
     "add": "Add"
+  },
+  "Messages" : {
+    "requestSuccess": "Request processed successfully",
+    "requestError": "Failed to fetch. Reason: {error}"
   }
 }
