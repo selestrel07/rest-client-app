@@ -52,7 +52,6 @@ export async function processRequest(request: RequestType) {
     requestData.body = request.body ?? '';
 
     await saveRequestData(await getCookie('userUid'), requestData);
-    console.log(response.statusText, response.ok);
 
     return {
       result: 'success',
@@ -62,7 +61,6 @@ export async function processRequest(request: RequestType) {
       body: result,
     };
   } catch (error) {
-    console.log('my error', error);
     return {
       result: 'error',
       error:
