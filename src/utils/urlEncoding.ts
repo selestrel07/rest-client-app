@@ -1,15 +1,13 @@
+import { stringToBase64, base64ToString } from './stringBase64Converter';
+
 export function encodeBase64(value: string): string {
   if (!value) return '';
-  return Buffer.from(value, 'utf-8').toString('base64');
+  return stringToBase64(value) ?? '';
 }
 
 export function decodeBase64(value: string | undefined): string {
   if (!value) return '';
-  try {
-    return Buffer.from(value, 'base64').toString('utf-8');
-  } catch {
-    return '';
-  }
+  return base64ToString(value) ?? '';
 }
 
 export function buildQuery(headers: Record<string, string>): string {
