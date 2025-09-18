@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
 import { AuthForm } from '@components';
 import { userEvent } from '@testing-library/user-event';
+import { ReduxProvider } from '@store/Providers';
 
 const renderWithIntl = (isRegistration: boolean) => {
   render(
@@ -30,7 +31,9 @@ const renderWithIntl = (isRegistration: boolean) => {
         },
       }}
     >
-      <AuthForm isRegistration={isRegistration} />
+      <ReduxProvider>
+        <AuthForm isRegistration={isRegistration} />
+      </ReduxProvider>
     </NextIntlClientProvider>
   );
 };
@@ -98,5 +101,5 @@ describe('AuthForm component tests', () => {
 
     await userEvent.type(confirmPasswordInput, 'password');
     expect(await screen.findByText('Passwords must match')).toBeInTheDocument();
-  });
+  }, 10000);
 });

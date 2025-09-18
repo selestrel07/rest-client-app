@@ -31,8 +31,9 @@
       "@messages/*": ["./messages/*"],
       "@data/*": ["./data/*"],
       "@types": ["./types/index.ts"],
-      "states/*": ["states/*"],
-      "store/*": ["store/*"],
+      "@states/*": ["./states/*"],
+      "@store/*": ["./store/*"],
+      "@actions/*": ["actions/*"],
       "@services/*": ["./services/*"]
     },
     "types": ["vitest/globals", "@testing-library/jest-dom"]

@@ -10,6 +10,8 @@ vi.mock('next-intl', () => ({
     const dict: Record<string, string> = {
       main: 'Main',
       signout: 'Sign out',
+      signin: 'Sign in',
+      signup: 'Sign up',
     };
     return dict[key] ?? key;
   },
@@ -29,14 +31,14 @@ const renderWithStore = (preloadedState?: { ui: localeState }) => {
 
   return render(
     <Provider store={store}>
-      <Header />
+      <Header locale={preloadedState?.ui.locale || 'en'} />
     </Provider>
   );
 };
 
 describe('Header component', () => {
   beforeEach(() => {
-    window.scrollY = 0;
+    Object.defineProperty(window, 'scrollY', { value: 0, writable: true });
     cleanup();
   });
 
@@ -48,6 +50,12 @@ describe('Header component', () => {
   it('shows Sign out, if user is authenticated', () => {
     renderWithStore({ ui: { isAuthenticated: true, locale: 'en' } });
     expect(screen.getByText('Sign out')).toBeInTheDocument();
+  });
+
+  it('shows Sign In and Sign Up if user is not authenticated', () => {
+    renderWithStore({ ui: { isAuthenticated: false, locale: 'en' } });
+    expect(screen.getByText('Sign in')).toBeInTheDocument();
+    expect(screen.getByText('Sign up')).toBeInTheDocument();
   });
 
   it("doesn't show Sign out, if user is not authenticated", () => {
@@ -62,7 +70,7 @@ describe('Header component', () => {
     expect(header.className).toContain('bg-violet-300');
     expect(header.className).toContain('h-20');
 
-    window.scrollY = 100;
+    Object.defineProperty(window, 'scrollY', { value: 100, writable: true });
     fireEvent.scroll(window);
 
     expect(header.className).toContain('bg-violet-400');
@@ -80,7 +88,7 @@ describe('Header component', () => {
 
     render(
       <Provider store={store}>
-        <Header />
+        <Header locale="en" />
       </Provider>
     );
 

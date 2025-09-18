@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import type { RootState } from 'store/store';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import { routesList } from '@data/routes-list';
+import { methods } from '@data/supported-methods';
 
 export default function Main() {
   const t = useTranslations('MainPage');
@@ -15,19 +17,19 @@ export default function Main() {
 
   return (
     <main className="flex flex-col items-center justify-center py-10">
-      <div className="max-w-xl w-full text-center bg-violet-100 rounded-xl shadow-lg p-10">
+      <div className="max-w-xl w-full text-center text-violet-950 bg-violet-200 rounded-xl shadow-lg p-10">
         {!isAuthenticated ? (
           <>
             <h1 className="text-2xl font-bold mb-6">{t('welcome')}</h1>
             <div className="flex gap-4 justify-center">
               <Link
-                href="/signin"
+                href={`/${routesList.login}`}
                 className="px-4 py-2 bg-violet-500 text-white rounded hover:bg-violet-600 transition"
               >
                 {t('signin')}
               </Link>
               <Link
-                href="/signup"
+                href={`/${routesList.register}`}
                 className="px-4 py-2 bg-violet-500 text-white rounded hover:bg-violet-600 transition"
               >
                 {t('signup')}
@@ -37,23 +39,23 @@ export default function Main() {
         ) : (
           <>
             <h1 className="text-2xl font-bold mb-6">
-              {t('welcomeBack', { user: user?.email ?? '' })}
+              {t('welcomeBack', { user: user ?? '' })}
             </h1>
             <div className="flex gap-4 justify-center">
               <Link
-                href="/rest/get"
+                href={`/${routesList.client}/${methods.GET}`}
                 className="px-4 py-2 bg-violet-500 text-white rounded hover:bg-violet-600 transition"
               >
                 {t('rest')}
               </Link>
               <Link
-                href="/history"
+                href={`/${routesList.history}`}
                 className="px-4 py-2 bg-violet-500 text-white rounded hover:bg-violet-600 transition"
               >
                 {t('history')}
               </Link>
               <Link
-                href="/variables"
+                href={`/${routesList.variables}`}
                 className="px-4 py-2 bg-violet-500 text-white rounded hover:bg-violet-600 transition"
               >
                 {t('variables')}

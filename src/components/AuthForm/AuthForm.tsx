@@ -5,6 +5,11 @@ import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { AuthFormData, schemaSignIn, schemaSignUp } from '@utils/validation';
+import { ActionResponse, UserAuth } from '@types';
+import { loginUser, registerUser } from '@actions/auth-actions';
+import { setToastValue } from '@states/toastSlice';
+import { signIn } from '@states/uiSlice';
+import { useAppDispatch } from '../../hooks/useAppStore';
 
 const inputClasses = `border-2 rounded-sm focus:bg-violet-100 transition-all duration-300 px-1`;
 const fieldClasses = 'flex w-full justify-start items-center gap-2';
@@ -28,9 +33,32 @@ export const AuthForm: FC<{ isRegistration?: boolean }> = ({
   } = useForm<AuthFormData>({
     resolver: yupResolver(isRegistration ? schemaSignUp(t) : schemaSignIn(t)),
   });
+  const dispatch = useAppDispatch();
 
-  const onSubmit = (data: { email: string; password: string }) =>
-    console.log(data);
+  const onSubmit = async (data: UserAuth) => {
+    let result: ActionResponse;
+    if (isRegistration) {
+      result = await registerUser(data);
+    } else {
+      result = await loginUser(data);
+    }
+    if (result.errorMessage) {
+      dispatch(
+        setToastValue({
+          message: result.errorMessage,
+          type: 'error',
+        })
+      );
+    } else {
+      dispatch(
+        setToastValue({
+          message: `Successful ${isRegistration ? 'registration' : 'login'}`,
+          type: 'success',
+        })
+      );
+      dispatch(signIn(data.email));
+    }
+  };
 
   return (
     <form
