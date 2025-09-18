@@ -1,9 +1,11 @@
 'use client';
 
 import { FC, useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 export const ButtonCopy: FC<{ action: () => void }> = ({ action }) => {
   const [copied, setCopied] = useState(false);
+  const t = useTranslations('RestClient');
 
   const handleClick = () => {
     setCopied(true);
@@ -23,11 +25,10 @@ export const ButtonCopy: FC<{ action: () => void }> = ({ action }) => {
     <button
       data-testid="button-copy"
       onClick={handleClick}
-      className={`border-1 rounded-sm w-12 px-1.5 py-0.5
-      hover:scale-105 cursor-pointer transition:all duration-300 
-      ${copied ? 'bg-green-100 border-green-700' : 'bg-transparent border-violet-700 '}`}
+      className={`px-3 py-1 rounded transition duration-300 text-white border-1 w-30 cursor-pointer
+      ${copied ? 'bg-green-100 hover:bg-green-200 border-green-700' : 'bg-violet-600 border-violet-600 hover:bg-violet-500'}`}
     >
-      {copied ? '✔' : 'copy'}
+      {copied ? '✔' : t('copy')}
     </button>
   );
 };

@@ -3,7 +3,7 @@
 import { FC, useState, useEffect } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { convertUrlToRequest } from '@utils/requestUrlConverter';
-import { MethodSelector } from '@components';
+import { CodeGenerator, MethodSelector } from '@components';
 import { EndpointInput } from '@components';
 import { HeadersEditor } from '@components';
 import { BodyEditor } from '@components';
@@ -95,53 +95,65 @@ export const RestClient: FC = () => {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-gray-800">{t('title')}</h1>
+    <div className="p-6 max-w-4xl space-y-6 self-start">
+      <h1 className="text-2xl font-bold text-violet-950">{t('title')}</h1>
+      <div className="flex justify-between gap-6 w-full">
+        <div className="space-y-6">
+          <MethodSelector value={method} onChange={setMethod} />
 
-      <div className="space-y-6">
-        <MethodSelector value={method} onChange={setMethod} />
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2"></label>
-          <EndpointInput value={endpoint} onChange={setEndpoint} />
-        </div>
-
-        <HeadersEditor
-          headers={headers}
-          onAdd={(key, value) => setHeaders([...headers, { key, value }])}
-        />
-
-        <BodyEditor
-          value={body}
-          onChange={setBody}
-          isJson={isJson}
-          onModeChange={setIsJson}
-        />
-
-        {!isBodyValid && isJson && body && (
-          <p className="text-red-500 text-sm">{t('invalidJson')}</p>
-        )}
-
-        <button
-          onClick={handleSubmit}
-          disabled={!canSend || isLoading}
-          className={`px-4 py-2 rounded transition-colors ${
-            !canSend || isLoading
-              ? 'bg-gray-300 cursor-not-allowed text-gray-500'
-              : 'bg-violet-500 hover:bg-violet-600 text-white'
-          }`}
-        >
-          {isLoading ? '...' : t('sendRequest')}
-        </button>
-
-        {response && (
-          <div className="mt-6 p-4 border border-violet-700 rounded bg-violet-50">
-            <h2 className="text-lg font-semibold mb-2 text-gray-700">
-              {t('response')}
-            </h2>
-            <ResponseViewer data={response} />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2"></label>
+            <EndpointInput value={endpoint} onChange={setEndpoint} />
           </div>
-        )}
+
+          <HeadersEditor
+            headers={headers}
+            onAdd={(key, value) => setHeaders([...headers, { key, value }])}
+          />
+
+          <BodyEditor
+            value={body}
+            onChange={setBody}
+            isJson={isJson}
+            onModeChange={setIsJson}
+          />
+
+          {!isBodyValid && isJson && body && (
+            <p className="text-red-500 text-sm">{t('invalidJson')}</p>
+          )}
+
+          <button
+            onClick={handleSubmit}
+            disabled={!canSend || isLoading}
+            className={`px-4 py-2 rounded transition-colors ${
+              !canSend || isLoading
+                ? 'bg-gray-300 cursor-not-allowed text-gray-500'
+                : 'bg-violet-500 hover:bg-violet-600 text-white cursor-pointer'
+            }`}
+          >
+            {isLoading ? '...' : t('sendRequest')}
+          </button>
+
+          {response && (
+            <div className="mt-6 p-4 border border-violet-700 rounded bg-violet-50">
+              <h2 className="text-lg font-semibold mb-2 text-gray-700">
+                {t('response')}
+              </h2>
+              <ResponseViewer data={response} />
+            </div>
+          )}
+        </div>
+        <CodeGenerator
+          request={{
+            method: 'GET',
+            url: 'http://localhost:3000/',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: '{"language": "curl","url": "http://localhost:3000/","headers": {"Accept": "application/json"}}',
+          }}
+        />
       </div>
     </div>
   );
