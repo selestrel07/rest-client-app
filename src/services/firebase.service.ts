@@ -1,12 +1,22 @@
+'use server';
+
 import { initializeApp } from 'firebase/app';
 import {
+  createUserWithEmailAndPassword,
   getAuth,
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
   signOut,
 } from 'firebase/auth';
-import { getFirestore, addDoc, collection } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  getDocs,
+  getFirestore,
+  query,
+  where,
+} from 'firebase/firestore';
 import { handleFirebaseError } from './firebase-error-handler';
+import { RequestData } from '@types';
 
 const firebaseConfig = {
   apiKey: process.env.VITE_API_KEY,
@@ -58,6 +68,45 @@ export const registerUserWithEmailAndPassword = async (
 export const logout = async () => {
   try {
     await signOut(auth);
+  } catch (error) {
+    handleFirebaseError(error);
+  }
+};
+
+export const saveRequestData = async (
+  userId: string,
+  requestData: RequestData
+) => {
+  try {
+    await addDoc(collection(db, 'requests'), {
+      userId,
+      latency: requestData.latency,
+      status: requestData.status,
+      timestamp: requestData.timestamp,
+      method: requestData.method,
+      requestSize: requestData.requestSize,
+      responseSize: requestData.responseSize,
+      errorType: requestData.errorType ?? null,
+      url: requestData.url,
+      headers: requestData.headers,
+      body: requestData.body,
+    });
+  } catch (error) {
+    handleFirebaseError(error);
+  }
+};
+
+export const loadRequestData = async (userId: string) => {
+  try {
+    const q = query(collection(db, 'requests'), where('userId', '==', userId));
+
+    const data = await getDocs(q);
+
+    return data.docs.map((doc) => {
+      const requestData = doc.data();
+      delete requestData.userId;
+      return requestData;
+    });
   } catch (error) {
     handleFirebaseError(error);
   }

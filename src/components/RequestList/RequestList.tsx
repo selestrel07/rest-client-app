@@ -16,13 +16,15 @@ export default function RequestList({ requests }: Props) {
 
   if (requests.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-900 text-white p-8">
+      <div className="min-h-screen text-violet-950">
         <div className="max-w-2xl mx-auto text-center">
-          <h1 className="text-2xl font-bold mb-4">{t('noRequests')}</h1>
-          <p className="mb-6">{t('tryRestClient')}</p>
+          <h1 className="text-2xl font-bold mb-4 text-violet-950">
+            {t('noRequests')}
+          </h1>
+          <p className="mb-6 text-violet-950">{t('tryRestClient')}</p>
           <Link
             href="/rest"
-            className="inline-block px-6 py-2 bg-blue-500 hover:bg-blue-600 rounded transition-colors"
+            className="inline-block px-6 py-2 bg-violet-500 hover:bg-violet-600 rounded transition-colors text-violet-950"
           >
             {t('restClient')}
           </Link>
@@ -32,7 +34,7 @@ export default function RequestList({ requests }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-8">
+    <div className=" text-violet-950">
       <div className="max-w-2xl mx-auto">
         <h1 className="text-2xl font-bold mb-6">{t('history')}</h1>
         <ul className="space-y-2">
@@ -42,13 +44,13 @@ export default function RequestList({ requests }: Props) {
               <li key={i}>
                 <Link
                   href={`/client/${req.method}/${encodedUrl}`}
-                  className="block p-3 bg-gray-800 rounded hover:bg-gray-700 transition-colors cursor-pointer"
+                  className="block p-3 bg-violet-100 rounded hover:bg-violet-400 transition-colors cursor-pointer"
                 >
                   <span className="font-mono text-sm">
                     {req.method} {req.url}
                   </span>
                   <br />
-                  <span className="text-xs text-gray-400">
+                  <span className="text-xs text-violet-150">
                     {new Date(req.timestamp).toLocaleString()}
                   </span>
                 </Link>
