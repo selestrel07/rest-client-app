@@ -37,7 +37,7 @@ export default function RequestPage() {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-6">Request Details</h1>
-      <div className="bg-gray-100 p-4 rounded mb-4">
+      <div className="bg-violet-100 p-4 rounded mb-4">
         <p>
           <strong>Method:</strong> <code>{method}</code>
         </p>
@@ -57,8 +57,8 @@ export default function RequestPage() {
       {loading ? (
         <p>Loading content...</p>
       ) : (
-        <div className="border border-gray-300 rounded p-4 bg-white">
-          <pre className="whitespace-pre-wrap text-sm text-gray-800">
+        <div className="border border-violet-750 rounded p-4 ">
+          <pre className="p-4 bg-violet-100 rounded overflow-auto w-full text-sm whitespace-pre-wrap scroll-thin max-h-[50vh]">
             {content}
           </pre>
         </div>
