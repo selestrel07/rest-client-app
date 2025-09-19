@@ -12,7 +12,7 @@ type Props = {
     status: number;
     requestSize: number;
     responseSize: number;
-    errorType?: string | null;
+    errorType: string | null;
   }[];
 };
 
@@ -44,7 +44,7 @@ export default function RequestList({ requests }: Props) {
         <h1 className="text-2xl font-bold mb-6">{t('history')}</h1>
         <ul className="space-y-2 p-4 rounded overflow-auto text-sm whitespace-pre-wrap scroll-thin max-h-[70vh] border border-violet-700">
           {requests.map((req, i) => {
-            const encodedUrl = btoa(req.url);
+            const encodedUrl = btoa(encodeURIComponent(req.url));
             const isFailed = req.status >= 400 || req.errorType;
 
             return (
@@ -84,17 +84,11 @@ export default function RequestList({ requests }: Props) {
                               : 'text-yellow-600'
                         }
                       >
-                        {req.status || '?'}
+                        {req.status}
                       </span>
                     </span>
                     <span>
-                      <strong>Time:</strong> {req.latency?.toFixed(0) || '?'} ms
-                    </span>
-                    <span>
-                      <strong>Req Size:</strong> {formatBytes(req.requestSize)}
-                    </span>
-                    <span>
-                      <strong>Res Size:</strong> {formatBytes(req.responseSize)}
+                      <strong>Time:</strong> {req.latency?.toFixed(0)} ms
                     </span>
                     <span>
                       <strong>Date:</strong>{' '}
@@ -115,12 +109,4 @@ export default function RequestList({ requests }: Props) {
       </div>
     </div>
   );
-}
-
-function formatBytes(bytes: number): string {
-  if (bytes === 0) return '0 B';
-  const k = 1024;
-  const sizes = ['B', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
 }
