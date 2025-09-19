@@ -18,7 +18,7 @@ describe('HeadersEditor', () => {
   });
 
   it('renders key-value inputs and Add button', () => {
-    render(<HeadersEditor headers={[]} onAdd={onAdd} />);
+    render(<HeadersEditor headers={{}} onAdd={onAdd} />);
 
     expect(screen.getByPlaceholderText('Key')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Value')).toBeInTheDocument();
@@ -26,7 +26,7 @@ describe('HeadersEditor', () => {
   });
 
   it('calls onAdd with key and value when Add is clicked', () => {
-    render(<HeadersEditor headers={[]} onAdd={onAdd} />);
+    render(<HeadersEditor headers={{}} onAdd={onAdd} />);
 
     fireEvent.change(screen.getByPlaceholderText('Key'), {
       target: { value: 'Authorization' },
@@ -40,7 +40,7 @@ describe('HeadersEditor', () => {
   });
 
   it('does not call onAdd if key or value is empty', () => {
-    render(<HeadersEditor headers={[]} onAdd={onAdd} />);
+    render(<HeadersEditor headers={{}} onAdd={onAdd} />);
 
     fireEvent.change(screen.getByPlaceholderText('Key'), {
       target: { value: '' },
@@ -56,7 +56,7 @@ describe('HeadersEditor', () => {
   it('displays added headers in list', () => {
     render(
       <HeadersEditor
-        headers={[{ key: 'Content-Type', value: 'application/json' }]}
+        headers={{ 'Content-Type': 'application/json' }}
         onAdd={onAdd}
       />
     );
@@ -66,7 +66,7 @@ describe('HeadersEditor', () => {
   });
 
   it('clears input fields after adding header', () => {
-    render(<HeadersEditor headers={[]} onAdd={onAdd} />);
+    render(<HeadersEditor headers={{}} onAdd={onAdd} />);
 
     const keyInput = screen.getByPlaceholderText('Key');
     const valueInput = screen.getByPlaceholderText('Value');
