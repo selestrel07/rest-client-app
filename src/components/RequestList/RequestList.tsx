@@ -44,13 +44,12 @@ export default function RequestList({ requests }: Props) {
         <h1 className="text-2xl font-bold mb-6">{t('history')}</h1>
         <ul className="space-y-2 p-4 rounded overflow-auto text-sm whitespace-pre-wrap scroll-thin max-h-[70vh] border border-violet-700">
           {requests.map((req, i) => {
-            const encodedUrl = btoa(encodeURIComponent(req.url));
             const isFailed = req.status >= 400 || req.errorType;
 
             return (
               <li key={i}>
                 <Link
-                  href={`/client/${req.method}/${encodedUrl}`}
+                  href={`/client/${req.method}/${encodeURIComponent(btoa(req.url))}`}
                   className="block p-3 bg-violet-100 rounded hover:bg-violet-200 transition-colors cursor-pointer"
                 >
                   <div className="font-mono text-sm mb-1">
@@ -74,7 +73,7 @@ export default function RequestList({ requests }: Props) {
 
                   <div className="flex flex-wrap gap-x-4 text-xs mt-1">
                     <span>
-                      <strong>Status:</strong>{' '}
+                      <strong>{t('status')}</strong>{' '}
                       <span
                         className={
                           isFailed
@@ -88,17 +87,17 @@ export default function RequestList({ requests }: Props) {
                       </span>
                     </span>
                     <span>
-                      <strong>Time:</strong> {req.latency?.toFixed(0)} ms
+                      <strong>{t('time')}</strong> {req.latency?.toFixed(0)} ms
                     </span>
                     <span>
-                      <strong>Date:</strong>{' '}
+                      <strong>{t('date')}</strong>{' '}
                       {new Date(req.timestamp).toLocaleString()}
                     </span>
                   </div>
 
                   {req.errorType && (
                     <div className="text-xs text-red-600 mt-1 font-mono">
-                      Error: {req.errorType}
+                      {t('error')}: {req.errorType}
                     </div>
                   )}
                 </Link>

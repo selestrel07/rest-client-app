@@ -72,6 +72,15 @@
     "noRequests": "You have not yet executed requests",
     "tryRestClient": "Try creating your first request in the REST Client.",
     "restClient": "REST Client",
-    "history": "History Requests"
+    "history": "History Requests",
+    "time": "Time",
+    "status": "Status",
+    "date": "Date",
+    "error": "Error",
+    "details": "Request Details",
+    "method": "Method",
+    "url": "Url",
+    "errorUrl": "Invalid URL",
+    "loading": "Loading Content..."
   }
 }
