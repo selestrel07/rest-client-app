@@ -83,7 +83,7 @@ export const Record: FC<RecordProperties> = ({
         onChange={handleChange('value')}
       />
       <button
-        data-testid={`${editMode ? 'edit-mode' : 'accept'}-btn`}
+        data-testid={`${editMode ? 'accept' : 'edit-mode'}-btn-${name}`}
         className="cursor-pointer hover:scale-110"
         onClick={() => {
           setEditMode(!editMode);
@@ -93,7 +93,7 @@ export const Record: FC<RecordProperties> = ({
         {editMode ? <GrCheckmark /> : <MdModeEdit />}
       </button>
       <button
-        data-testid="delete-btn"
+        data-testid={`delete-btn-${name}`}
         className="cursor-pointer hover:scale-110"
         onClick={() => deleteHandlerAction(name)}
       >
