@@ -55,5 +55,10 @@
       "requiredConfirm": "Необходимо подтвердить пароль",
       "matchPasswords": "Пароли не совпадают"
     }
+  },
+  "VariablesPage": {
+    "name": "Имя: ",
+    "value": "Значение: ",
+    "add": "Добавить"
   }
 }

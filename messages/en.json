@@ -56,5 +56,10 @@
       "requiredConfirm": "Confirm password",
       "matchPasswords": "Passwords must match"
     }
+  },
+  "VariablesPage": {
+    "name": "Name: ",
+    "value": "Value: ",
+    "add": "Add"
   }
 }

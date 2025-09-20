@@ -58,6 +58,7 @@ export const AuthForm: FC<{ isRegistration?: boolean }> = ({
           type: 'success',
         })
       );
+      console.log(loadVariables(data.email));
       dispatch(setVariables(loadVariables(data.email)));
       dispatch(signIn(data.email));
     }
