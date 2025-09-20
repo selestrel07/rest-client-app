@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode, useEffect } from 'react';
-import { useAppDispatch } from '../../hooks/useAppStore';
+import { useAppDispatch } from '../hooks/useAppStore';
 import { setLocale, signIn, signOut } from '@states/uiSlice';
 
 export function LayoutWrapper({

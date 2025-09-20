@@ -9,7 +9,7 @@ import { ReduxProvider } from 'store/Providers';
 import '../global.css';
 import { ToastWrapper } from '@components';
 import { getCookie, isAuthenticated } from '@actions/auth-actions';
-import { LayoutWrapper } from './layoutWrapper';
+import { LayoutWrapper } from '../layoutWrapper';
 
 export const metadata: Metadata = {
   title: 'Yagni Rest Client App',
