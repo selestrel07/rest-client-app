@@ -1,11 +1,9 @@
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
-import { Footer } from '@components';
-import { Header } from '@components';
+import { Footer, Header, NotFound } from '@components';
 import { ReduxProvider } from '@store/Providers';
 import { getCookie, isAuthenticated } from '@actions/auth-actions';
 import './global.css';
-import { NotFound } from '../components/NotFound/NotFound';
 import { LayoutWrapper } from './layoutWrapper';
 
 export const metadata: Metadata = {
