@@ -1,4 +1,5 @@
 export type APIResponse = {
   status: number;
-  data: string;
+  data?: string | object | null;
+  error?: string | null;
 };

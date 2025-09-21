@@ -1,12 +1,11 @@
-export function stringToBase64(text: string | undefined): string | undefined {
-  if (text === undefined) return undefined;
+export function stringToBase64(text: string | undefined): string {
+  if (!text) return '';
   return Buffer.from(text, 'utf-8')
     .toString('base64')
     .replace(/\+/g, '-')
     .replace(/\//g, '_')
     .replace(/=+$/g, '');
 }
-
 export function base64ToString(base64: string | undefined): string | undefined {
   if (base64 === undefined) return undefined;
   const base64Regex =

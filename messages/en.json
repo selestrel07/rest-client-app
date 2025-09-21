@@ -64,10 +64,29 @@
       "matchPasswords": "Passwords must match"
     }
   },
-  "Messages" : {
+  "Messages": {
     "requestSuccess": "Request processed successfully",
     "requestError": "Failed to fetch. Reason: {error}"
   },
+
+  "History": {
+    "noRequests": "You have not yet executed requests",
+    "tryRestClient": "Try creating your first request in the REST Client.",
+    "restClient": "REST Client",
+    "history": "History Requests",
+    "time": "Time",
+    "status": "Status",
+    "date": "Date",
+    "error": "Error",
+    "method": "Method",
+    "url": "Url",
+    "errorUrl": "Invalid URL",
+    "loading": "Loading Content...",
+    "latency": "Latency",
+    "responseSize": "Response Size",
+    "requestSize": "Request Size"
+  },
+  
   "VariablesPage": {
     "name": "Name: ",
     "value": "Value: ",
