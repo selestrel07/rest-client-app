@@ -5,6 +5,8 @@ vi.mock('next-intl', () => ({
   useTranslations: () => (key: string) => {
     const messages: Record<string, string> = {
       text: 'Enter request body...',
+      textButton: 'Text',
+      prettify: 'Prettify',
     };
     return messages[key] || key;
   },

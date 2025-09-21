@@ -1,11 +1,10 @@
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
-import { Footer } from '@components';
-import { Header } from '@components';
+import { Footer, Header, NotFound } from '@components';
 import { ReduxProvider } from '@store/Providers';
-import { isAuthenticated } from '@actions/auth-actions';
+import { getCookie, isAuthenticated } from '@actions/auth-actions';
 import './global.css';
-import { NotFound } from '../components/NotFound/NotFound';
+import { LayoutWrapper } from './layoutWrapper';
 
 export const metadata: Metadata = {
   title: '404 - Page Not Found',
@@ -17,24 +16,23 @@ export default async function NotFoundPage({
 }: {
   params: Promise<{ locale: string }>;
 }) {
-  const userLoggedIn = await isAuthenticated();
   const { locale } = await params;
+  const userLoggedIn = await isAuthenticated();
+  const user = await getCookie('userEmail');
   return (
     <html>
       <body>
         <NextIntlClientProvider>
-          <ReduxProvider
-            preloadedState={{
-              ui: {
-                locale: locale as 'en' | 'ru',
-                isAuthenticated: userLoggedIn,
-                user: '',
-              },
-            }}
-          >
-            <Header locale={locale as 'en' | 'ru'} />
-            <NotFound />
-            <Footer />
+          <ReduxProvider>
+            <LayoutWrapper
+              locale={locale}
+              user={user}
+              isAuthenticated={userLoggedIn}
+            >
+              <Header locale={locale as 'en' | 'ru'} />
+              <NotFound />
+              <Footer />
+            </LayoutWrapper>
           </ReduxProvider>
         </NextIntlClientProvider>
       </body>

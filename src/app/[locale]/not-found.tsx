@@ -1,12 +1,9 @@
-import { useTranslations } from 'next-intl';
+import { NotFound } from '@components';
 
-export default function NotFound() {
-  const t = useTranslations('NotFoundPage');
+export default function LocaleNotFound() {
   return (
     <div>
-      <div className="flex items-center justify-center w-screen min-h-[calc(100vh-36px)]">
-        {t('text')}
-      </div>
+      <NotFound />
     </div>
   );
 }

@@ -40,14 +40,18 @@ export function BodyEditor({
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">Body</label>
+      <label className="block text-sm font-medium text-gray-700">
+        {t('body')}
+      </label>
 
       <div className="flex gap-2 mb-2">
         <button
           type="button"
           onClick={() => onModeChange(true)}
-          className={`px-2 py-1 text-xs rounded ${
-            isJson ? 'bg-violet-500 text-white' : 'bg-gray-200 text-gray-700'
+          className={`px-2 py-1 text-xs rounded transition-all duration-300 ${
+            isJson
+              ? 'bg-violet-500 text-white'
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300 cursor-pointer'
           }`}
         >
           JSON
@@ -55,18 +59,20 @@ export function BodyEditor({
         <button
           type="button"
           onClick={() => onModeChange(false)}
-          className={`px-2 py-1 text-xs rounded ${
-            !isJson ? 'bg-violet-500 text-white' : 'bg-gray-200 text-gray-700'
+          className={`px-2 py-1 text-xs rounded transition-all duration-300 ${
+            !isJson
+              ? 'bg-violet-500 text-white'
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300 cursor-pointer'
           }`}
         >
-          Text
+          {t('textButton')}
         </button>
         <button
           type="button"
           onClick={handlePrettify}
-          className="px-2 py-1 text-xs bg-gray-200 hover:bg-gray-300"
+          className="px-2 py-1 text-xs bg-gray-200 rounded hover:bg-gray-300 cursor-pointer transition-all duration-300"
         >
-          Prettify
+          {t('prettify')}
         </button>
       </div>
 

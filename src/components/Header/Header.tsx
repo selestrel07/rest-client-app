@@ -12,6 +12,7 @@ import { setToastValue } from '@states/toastSlice';
 import { routesList } from '@data/routes-list';
 import { useRouter } from '@i18n/navigation';
 import { useAppDispatch, useAppSelector } from '../../hooks/useAppStore';
+import { clearVariables } from '@states/variablesSlice';
 
 export const Header: FC<{ locale: 'en' | 'ru' }> = ({ locale }) => {
   const [scrolled, setScrolled] = useState(false);
@@ -31,15 +32,16 @@ export const Header: FC<{ locale: 'en' | 'ru' }> = ({ locale }) => {
   }, []);
 
   const handleSignOut = async () => {
-    dispatch(signOut());
     try {
       await removeAuthCookie();
+      dispatch(signOut());
       dispatch(
         setToastValue({
           message: 'Logged out',
           type: 'success',
         })
       );
+      dispatch(clearVariables());
     } catch {
       dispatch(
         setToastValue({

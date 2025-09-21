@@ -1,12 +1,12 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { APIResponse } from '@types';
 
-type APIResponse = { error: string } | { status: number; data: unknown } | null;
 export type HeaderItem = { key: string; value: string };
 
 interface RestClientState {
   method: string;
   endpoint: string;
-  headers: HeaderItem[];
+  headers: Record<string, string>;
   body: string;
   isJson: boolean;
   response: APIResponse;
@@ -16,52 +16,12 @@ interface RestClientState {
 const initialState: RestClientState = {
   method: 'GET',
   endpoint: '',
-  headers: [],
+  headers: {},
   body: '',
   isJson: true,
-  response: null,
+  response: {} as APIResponse,
   isLoading: false,
 };
-
-export const sendRequest = createAsyncThunk(
-  'restClient/sendRequest',
-  async (
-    {
-      method,
-      endpoint,
-      headers,
-      body,
-    }: Omit<RestClientState, 'response' | 'isJson' | 'isLoading'>,
-    { rejectWithValue }
-  ) => {
-    try {
-      const res = await fetch(endpoint, {
-        method,
-        headers: headers.reduce(
-          (acc, h) => {
-            if (h.key) acc[h.key] = h.value;
-            return acc;
-          },
-          {} as Record<string, string>
-        ),
-        body: method === 'GET' || !body ? undefined : body,
-      });
-
-      let data: unknown;
-      try {
-        data = await res.json();
-      } catch {
-        data = await res.text();
-      }
-
-      return { status: res.status, data };
-    } catch (err) {
-      return rejectWithValue(
-        err instanceof Error ? err.message : 'Unknown error'
-      );
-    }
-  }
-);
 
 const restClientSlice = createSlice({
   name: 'restClient',
@@ -74,9 +34,12 @@ const restClientSlice = createSlice({
       state.endpoint = action.payload;
     },
     addHeader: (state, action: PayloadAction<HeaderItem>) => {
-      state.headers.push(action.payload);
+      state.headers = Object.fromEntries([
+        ...Object.entries(state.headers),
+        ...Object.entries(action.payload),
+      ]);
     },
-    setHeaders: (state, action: PayloadAction<HeaderItem[]>) => {
+    setHeaders: (state, action: PayloadAction<Record<string, string>>) => {
       state.headers = action.payload;
     },
     setBody: (state, action: PayloadAction<string>) => {
@@ -85,24 +48,12 @@ const restClientSlice = createSlice({
     setIsJson: (state, action: PayloadAction<boolean>) => {
       state.isJson = action.payload;
     },
-    clearResponse: (state) => {
-      state.response = null;
+    setResponse: (state, action: PayloadAction<APIResponse>) => {
+      state.response = action.payload;
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(sendRequest.pending, (state) => {
-        state.isLoading = true;
-        state.response = null;
-      })
-      .addCase(sendRequest.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.response = action.payload as APIResponse;
-      })
-      .addCase(sendRequest.rejected, (state, action) => {
-        state.isLoading = false;
-        state.response = { error: action.payload as string };
-      });
+    clearResponse: (state) => {
+      state.response = {} as APIResponse;
+    },
   },
 });
 
@@ -113,6 +64,7 @@ export const {
   setHeaders,
   setBody,
   setIsJson,
+  setResponse,
   clearResponse,
 } = restClientSlice.actions;
 export default restClientSlice.reducer;

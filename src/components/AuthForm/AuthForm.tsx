@@ -10,6 +10,8 @@ import { loginUser, registerUser } from '@actions/auth-actions';
 import { setToastValue } from '@states/toastSlice';
 import { signIn } from '@states/uiSlice';
 import { useAppDispatch } from '../../hooks/useAppStore';
+import { setVariables } from '@states/variablesSlice';
+import { loadVariables } from '@services/local-storage.service';
 
 const inputClasses = `border-2 rounded-sm focus:bg-violet-100 transition-all duration-300 px-1`;
 const fieldClasses = 'flex w-full justify-start items-center gap-2';
@@ -56,6 +58,7 @@ export const AuthForm: FC<{ isRegistration?: boolean }> = ({
           type: 'success',
         })
       );
+      dispatch(setVariables(loadVariables(data.email)));
       dispatch(signIn(data.email));
     }
   };

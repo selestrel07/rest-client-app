@@ -33,9 +33,10 @@
       "@types": ["./types/index.ts"],
       "@states/*": ["./states/*"],
       "@store/*": ["./store/*"],
-      "@actions/*": ["actions/*"]
+      "@actions/*": ["actions/*"],
+      "@services/*": ["./services/*"]
     },
-    "types": ["vitest/globals", "@testing-library/jest-dom"]
+    "types": ["vitest/globals", "@testing-library/jest-dom", "redux-persist"]
   },
   "include": [
     "**/*.ts",

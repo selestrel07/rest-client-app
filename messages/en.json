@@ -36,7 +36,14 @@
     "response": "Response",
     "button": "Add",
     "text": "Enter request body...",
-    "error": "Please enter a valid URL (e.g. https://example.com)"
+    "error": "Please enter a valid URL (e.g. https://example.com)",
+    "copy": "copy",
+    "method": "Method",
+    "endpoint": "Endpoint",
+    "headers": "Headers",
+    "body": "Body",
+    "textButton": "Text",
+    "prettify": "Prettify"
   },
   "AuthForm": {
     "email": "Email:",
@@ -56,5 +63,14 @@
       "requiredConfirm": "Confirm password",
       "matchPasswords": "Passwords must match"
     }
+  },
+  "Messages" : {
+    "requestSuccess": "Request processed successfully",
+    "requestError": "Failed to fetch. Reason: {error}"
+  },
+  "VariablesPage": {
+    "name": "Name: ",
+    "value": "Value: ",
+    "add": "Add"
   }
 }

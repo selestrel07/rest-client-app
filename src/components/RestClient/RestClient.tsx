@@ -1,35 +1,58 @@
 'use client';
 
-import { FC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../../store/store';
+import { FC, useEffect, useMemo } from 'react';
+import { useParams, useSearchParams } from 'next/navigation';
 import {
-  setMethod,
-  setEndpoint,
-  addHeader,
-  setBody,
-  setIsJson,
-  sendRequest,
-  clearResponse,
-} from '../../states/restClientSlice';
-import {
-  MethodSelector,
   EndpointInput,
   HeadersEditor,
   BodyEditor,
   ResponseViewer,
+  CodeGenerator,
+  MethodSelector,
 } from '@components';
 import { useTranslations } from 'next-intl';
+import { processRequest } from '@actions/request-actions';
+import { useAppDispatch, useAppSelector } from '../../hooks/useAppStore';
+import { setToastValue } from '@states/toastSlice';
+import { decodeBase64, parseQuery } from '@utils/urlEncoding';
 import { useRouter } from '@i18n/navigation';
+import {
+  addHeader,
+  clearResponse,
+  setBody,
+  setEndpoint,
+  setHeaders,
+  setIsJson,
+  setMethod,
+  setResponse,
+} from '@states/restClientSlice';
 import { buildRestUrl } from '@utils/buildRestUrl';
 
 export const RestClient: FC = () => {
   const t = useTranslations('RestClient');
-  const dispatch = useDispatch<AppDispatch>();
+  const tMessages = useTranslations('Messages');
+  const params = useParams<{ method?: string; requestpart?: string[] }>();
+  const searchParams = useSearchParams();
+  const initialMethod = params?.method?.toUpperCase() || 'GET';
+  const [urlBase64, bodyBase64] = params?.requestpart ?? [];
+  const url = urlBase64 ? decodeBase64(urlBase64) : '';
+  const initialBody = bodyBase64 ? decodeBase64(bodyBase64) : '';
+  const initialHeaders = useMemo(
+    () => parseQuery(searchParams.toString()),
+    [searchParams]
+  );
+  const dispatch = useAppDispatch();
   const router = useRouter();
-
   const { method, endpoint, headers, body, isJson, response, isLoading } =
-    useSelector((state: RootState) => state.restClient);
+    useAppSelector((state) => state.restClient);
+
+  useEffect(() => {
+    dispatch(setMethod(initialMethod));
+    dispatch(setEndpoint(url));
+    dispatch(setBody(initialBody));
+
+    dispatch(setHeaders(initialHeaders));
+  }, [initialMethod, url, initialBody, initialHeaders, dispatch]);
 
   const handleMethodChange = (newMethod: string) => {
     dispatch(setMethod(newMethod));
@@ -38,18 +61,40 @@ export const RestClient: FC = () => {
     router.replace(url);
   };
 
-  const handleSubmit = () => {
-    dispatch(sendRequest({ method, endpoint, headers, body }));
+  const handleSubmit = async () => {
+    const res = await processRequest({
+      method,
+      body,
+      headers,
+      url: endpoint,
+    });
+
+    if (res.result === 'success') {
+      dispatch(
+        setResponse({
+          status: res.status ?? 200,
+          data: res.body ?? '',
+        })
+      );
+      dispatch(
+        setToastValue({
+          type: 'success',
+          message: tMessages('requestSuccess'),
+        })
+      );
+    } else {
+      dispatch(
+        setToastValue({
+          type: 'error',
+          message: tMessages('requestError', { error: String(res.error) }),
+        })
+      );
+    }
+
     const newUrl = buildRestUrl({
       method,
       url: endpoint,
-      headers: headers.reduce(
-        (acc, h) => {
-          if (h.key) acc[h.key] = h.value;
-          return acc;
-        },
-        {} as Record<string, string>
-      ),
+      headers,
       body,
     });
     router.replace(newUrl);
@@ -81,48 +126,65 @@ export const RestClient: FC = () => {
   const canSend = !!endpoint && isEndpointValid && isBodyValid;
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-gray-800">{t('title')}</h1>
-      <MethodSelector value={method} onChange={handleMethodChange} />
-      <EndpointInput
-        value={endpoint}
-        onChange={(val) => dispatch(setEndpoint(val))}
-      />
-      <HeadersEditor
-        headers={headers}
-        onAdd={(k, v) => dispatch(addHeader({ key: k, value: v }))}
-      />
-      <BodyEditor
-        value={body}
-        onChange={(val) => dispatch(setBody(val))}
-        isJson={isJson}
-        onModeChange={(val) => dispatch(setIsJson(val))}
-      />
+    <div className="p-6 max-w-4xl space-y-6 self-start">
+      <h1 className="text-2xl font-bold text-violet-950">{t('title')}</h1>
+      <div className="flex justify-between gap-6 w-full">
+        <div className="w-[500px]">
+          <MethodSelector value={method} onChange={handleMethodChange} />
 
-      {!isBodyValid && isJson && body && (
-        <p className="text-red-500 text-sm">{t('invalidJson')}</p>
-      )}
+          <div>
+            <EndpointInput
+              value={endpoint}
+              onChange={(val) => dispatch(setEndpoint(val))}
+            />
+          </div>
 
-      <button
-        onClick={handleSubmit}
-        disabled={!canSend || isLoading}
-        className={`px-4 py-2 rounded transition-colors ${
-          !canSend || isLoading
-            ? 'bg-gray-300 cursor-not-allowed text-gray-500'
-            : 'bg-violet-500 hover:bg-violet-600 text-white'
-        }`}
-      >
-        {isLoading ? '...' : t('sendRequest')}
-      </button>
+          <HeadersEditor
+            headers={headers}
+            onAdd={(k, v) => dispatch(addHeader({ key: k, value: v }))}
+          />
 
-      {response && (
-        <div className="mt-6 p-4 border border-violet-700 rounded bg-violet-50">
-          <h2 className="text-lg font-semibold mb-2 text-gray-700">
-            {t('response')}
-          </h2>
-          <ResponseViewer data={response} />
+          <BodyEditor
+            value={body}
+            onChange={(val) => dispatch(setBody(val))}
+            isJson={isJson}
+            onModeChange={(val) => dispatch(setIsJson(val))}
+          />
+
+          {!isBodyValid && isJson && body && (
+            <p className="text-red-500 text-sm">{t('invalidJson')}</p>
+          )}
+
+          <button
+            onClick={handleSubmit}
+            disabled={!canSend || isLoading}
+            className={`px-4 py-2 rounded transition-colors ${
+              !canSend || isLoading
+                ? 'bg-gray-300 cursor-not-allowed text-gray-500'
+                : 'bg-violet-500 hover:bg-violet-600 text-white cursor-pointer'
+            }`}
+          >
+            {isLoading ? '...' : t('sendRequest')}
+          </button>
+
+          {response && (
+            <div className="mt-6 p-4 border border-violet-700 rounded bg-violet-50">
+              <h2 className="text-lg font-semibold mb-2 text-gray-700">
+                {t('response')}
+              </h2>
+              <ResponseViewer data={response} />
+            </div>
+          )}
         </div>
-      )}
+        <CodeGenerator
+          request={{
+            method,
+            url: endpoint,
+            headers,
+            body,
+          }}
+        />
+      </div>
     </div>
   );
 };

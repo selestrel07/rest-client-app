@@ -1,9 +1,21 @@
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  cleanup,
+  waitFor,
+} from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import uiReducer, { type localeState } from '../../states/uiSlice';
+import uiReducer, { UiState } from '../../states/uiSlice';
 import { Header } from './Header';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
+import { userEvent } from '@testing-library/user-event';
+import { removeAuthCookie } from '@actions/auth-actions';
+
+vi.mock('@actions/auth-actions', () => ({
+  removeAuthCookie: vi.fn(),
+}));
 
 vi.mock('next-intl', () => ({
   useTranslations: () => (key: string) => {
@@ -23,7 +35,7 @@ vi.mock('next/navigation', () => ({
   usePathname: () => '/en/main',
 }));
 
-const renderWithStore = (preloadedState?: { ui: localeState }) => {
+const renderWithStore = (preloadedState?: { ui: UiState }) => {
   const store = configureStore({
     reducer: { ui: uiReducer },
     preloadedState,
@@ -43,28 +55,38 @@ describe('Header component', () => {
   });
 
   it('renders link Main', () => {
-    renderWithStore({ ui: { isAuthenticated: true, locale: 'en' } });
+    renderWithStore({
+      ui: { isAuthenticated: true, locale: 'en', user: 'test' },
+    });
     expect(screen.getByText('Main')).toBeInTheDocument();
   });
 
   it('shows Sign out, if user is authenticated', () => {
-    renderWithStore({ ui: { isAuthenticated: true, locale: 'en' } });
+    renderWithStore({
+      ui: { isAuthenticated: true, locale: 'en', user: 'test' },
+    });
     expect(screen.getByText('Sign out')).toBeInTheDocument();
   });
 
   it('shows Sign In and Sign Up if user is not authenticated', () => {
-    renderWithStore({ ui: { isAuthenticated: false, locale: 'en' } });
+    renderWithStore({
+      ui: { isAuthenticated: false, locale: 'en', user: 'test' },
+    });
     expect(screen.getByText('Sign in')).toBeInTheDocument();
     expect(screen.getByText('Sign up')).toBeInTheDocument();
   });
 
   it("doesn't show Sign out, if user is not authenticated", () => {
-    renderWithStore({ ui: { isAuthenticated: false, locale: 'en' } });
+    renderWithStore({
+      ui: { isAuthenticated: false, locale: 'en', user: 'test' },
+    });
     expect(screen.queryByText('Sign out')).not.toBeInTheDocument();
   });
 
   it('changes styles with scroll', () => {
-    renderWithStore({ ui: { isAuthenticated: true, locale: 'en' } });
+    renderWithStore({
+      ui: { isAuthenticated: true, locale: 'en', user: 'test' },
+    });
 
     const header = screen.getByRole('banner');
     expect(header.className).toContain('bg-violet-300');
@@ -78,12 +100,13 @@ describe('Header component', () => {
     expect(header.className).toContain('shadow-2xl');
   });
 
-  it('dispatches signOut when button clicked', () => {
+  it('dispatches signOut when button clicked', async () => {
+    (removeAuthCookie as Mock).mockResolvedValue(undefined);
     const store = configureStore({
       reducer: { ui: uiReducer },
       preloadedState: {
-        ui: { isAuthenticated: true, locale: 'en' },
-      } satisfies { ui: localeState },
+        ui: { isAuthenticated: true, locale: 'en', user: 'test' },
+      } satisfies { ui: UiState },
     });
 
     render(
@@ -92,15 +115,20 @@ describe('Header component', () => {
       </Provider>
     );
 
-    fireEvent.click(screen.getByText('Sign out'));
-    expect(store.getState().ui.isAuthenticated).toBe(false);
+    await userEvent.click(screen.getByText('Sign out'));
+    await waitFor(
+      () => expect(store.getState().ui.isAuthenticated).toBe(false),
+      {
+        timeout: 2000,
+      }
+    );
   });
 
   it('removes event listener on unmount', () => {
     const removeSpy = vi.spyOn(window, 'removeEventListener');
 
     const { unmount } = renderWithStore({
-      ui: { isAuthenticated: true, locale: 'en' },
+      ui: { isAuthenticated: true, locale: 'en', user: 'test' },
     });
 
     unmount();

@@ -6,4 +6,5 @@ export const methods = {
   UPDATE: 'UPDATE',
   OPTIONS: 'OPTIONS',
   PATCH: 'PATCH',
+  HEAD: 'HEAD',
 };
