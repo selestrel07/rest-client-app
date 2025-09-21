@@ -14,7 +14,7 @@ export default tseslint.config([
     extends: [
       js.configs.recommended,
       ...tseslint.configs.strict,
-      eslintPluginPrettier
+      eslintPluginPrettier,
     ],
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
@@ -33,6 +33,17 @@ export default tseslint.config([
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
+      ],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          vars: 'all',
+          args: 'after-used',
+          ignoreRestSiblings: true,
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
       ],
       'react-compiler/react-compiler': 'error',
       ...react.configs.recommended.rules,

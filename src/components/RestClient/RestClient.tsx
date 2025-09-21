@@ -1,8 +1,7 @@
 'use client';
 
-import { FC, useState, useEffect } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
-import { convertUrlToRequest } from '@utils/requestUrlConverter';
 import {
   EndpointInput,
   HeadersEditor,
@@ -15,6 +14,19 @@ import { useTranslations } from 'next-intl';
 import { processRequest } from '@actions/request-actions';
 import { useAppDispatch, useAppSelector } from '../../hooks/useAppStore';
 import { setToastValue } from '@states/toastSlice';
+import { decodeBase64, parseQuery } from '@utils/urlEncoding';
+import { useRouter } from '@i18n/navigation';
+import {
+  addHeader,
+  clearResponse,
+  setBody,
+  setEndpoint,
+  setHeaders,
+  setIsJson,
+  setMethod,
+  setResponse,
+} from '@states/restClientSlice';
+import { buildRestUrl } from '@utils/buildRestUrl';
 import { APIResponse } from '@types';
 import {
   interpolatePlainObject,
@@ -24,31 +36,81 @@ import {
 export const RestClient: FC = () => {
   const t = useTranslations('RestClient');
   const tMessages = useTranslations('Messages');
-  const params = useParams();
+  const params = useParams<{ method?: string; requestpart?: string[] }>();
   const searchParams = useSearchParams();
-  const initialRequest = convertUrlToRequest(params, searchParams);
-
-  const [method, setMethod] = useState<string>(initialRequest.method || 'GET');
-  const [endpoint, setEndpoint] = useState<string>(initialRequest.url || '');
-  const [headers, setHeaders] = useState<Record<string, string>>(
-    initialRequest.headers ?? {}
+  const initialMethod = params?.method?.toUpperCase() || 'GET';
+  const [urlBase64, bodyBase64] = params?.requestpart ?? [];
+  const url = urlBase64 ? decodeBase64(urlBase64) : '';
+  const initialBody = bodyBase64 ? decodeBase64(bodyBase64) : '';
+  const initialHeaders = useMemo(
+    () => parseQuery(searchParams.toString()),
+    [searchParams]
   );
-  const [body, setBody] = useState<string>(initialRequest.body || '');
-  const [isJson, setIsJson] = useState<boolean>(true);
-  const [response, setResponse] = useState<APIResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useAppDispatch();
   const variables = useAppSelector((state) => state.variables.value);
+  const router = useRouter();
+  const { method, endpoint, headers, body, isJson, response, isLoading } =
+    useAppSelector((state) => state.restClient);
 
   useEffect(() => {
-    const newRequest = convertUrlToRequest(params, searchParams);
-    if (newRequest.url && newRequest.url !== endpoint)
-      setEndpoint(newRequest.url);
-    if (newRequest.method && newRequest.method !== method)
-      setMethod(newRequest.method);
-    if (newRequest.body !== undefined && newRequest.body !== body)
-      setBody(newRequest.body);
-  }, [params, searchParams]);
+    dispatch(setMethod(initialMethod));
+    dispatch(setEndpoint(url));
+    dispatch(setBody(initialBody));
+
+    dispatch(setHeaders(initialHeaders));
+  }, [initialMethod, url, initialBody, initialHeaders, dispatch]);
+
+  const handleMethodChange = (newMethod: string) => {
+    dispatch(setMethod(newMethod));
+    dispatch(clearResponse());
+    const url = buildRestUrl({ method: newMethod, url: '' });
+    router.replace(url);
+  };
+
+  const handleSubmit = async () => {
+    const res = await processRequest({
+      method: interpolateString(method, variables),
+      body: interpolateString(body, variables),
+      headers: interpolatePlainObject(headers, variables),
+      url: interpolateString(endpoint, variables),
+    });
+
+    if (res.result === 'success') {
+      const result: APIResponse =
+        res.status && res.status < 400
+          ? {
+              status: res.status ?? 200,
+              data: res.body ?? '',
+            }
+          : {
+              status: res.status ?? 404,
+              data: '',
+              error: res.body,
+            };
+      dispatch(setResponse(result));
+      dispatch(
+        setToastValue({
+          type: 'success',
+          message: tMessages('requestSuccess'),
+        })
+      );
+    } else {
+      dispatch(
+        setToastValue({
+          type: 'error',
+          message: tMessages('requestError', { error: String(res.error) }),
+        })
+      );
+    }
+
+    const newUrl = buildRestUrl({
+      method,
+      url: endpoint,
+      headers,
+      body,
+    });
+    router.replace(newUrl);
+  };
 
   const isValidUrl = (string: string): boolean => {
     try {
@@ -81,72 +143,32 @@ export const RestClient: FC = () => {
   const canSend =
     !!endpoint && isEndpointValid && isBodyValid && isHeadersValid;
 
-  const handleSubmit = async () => {
-    if (!canSend || isLoading) return;
-
-    setIsLoading(true);
-    const res = await processRequest({
-      method: interpolateString(method, variables),
-      body: interpolateString(body, variables),
-      headers: interpolatePlainObject(headers, variables),
-      url: interpolateString(endpoint, variables),
-    });
-
-    if (res.result === 'success') {
-      setResponse({
-        status: res.status ?? 200,
-        data: res.body ?? '',
-      });
-      dispatch(
-        setToastValue({
-          type: 'success',
-          message: tMessages('requestSuccess'),
-        })
-      );
-    } else {
-      dispatch(
-        setToastValue({
-          type: 'error',
-          message: tMessages('requestError', { error: String(res.error) }),
-        })
-      );
-    }
-
-    setIsLoading(false);
-  };
-
   return (
     <div className="p-6 max-w-4xl space-y-6 self-start">
       <h1 className="text-2xl font-bold text-violet-950">{t('title')}</h1>
       <div className="flex justify-between gap-6 w-full">
         <div className="w-[500px]">
-          <MethodSelector value={method} onChange={setMethod} />
+          <MethodSelector value={method} onChange={handleMethodChange} />
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2"></label>
             <EndpointInput
               value={endpoint}
-              onChange={setEndpoint}
+              onChange={(val) => dispatch(setEndpoint(val))}
               isValid={isValidUrl(endpoint)}
             />
           </div>
 
           <HeadersEditor
             headers={headers}
-            onAdd={(key, value) =>
-              setHeaders({
-                ...headers,
-                [key]: value,
-              })
-            }
+            onAdd={(k, v) => dispatch(addHeader({ key: k, value: v }))}
             isValid={isHeadersValid}
           />
 
           <BodyEditor
             value={body}
-            onChange={setBody}
+            onChange={(val) => dispatch(setBody(val))}
             isJson={isJson}
-            onModeChange={setIsJson}
+            onModeChange={(val) => dispatch(setIsJson(val))}
           />
 
           {!isBodyValid && isJson && body && (
@@ -165,7 +187,7 @@ export const RestClient: FC = () => {
             {isLoading ? '...' : t('sendRequest')}
           </button>
 
-          {response && (
+          {Object.keys(response).length && (
             <div className="mt-6 p-4 border border-violet-700 rounded bg-violet-50">
               <h2 className="text-lg font-semibold mb-2 text-gray-700">
                 {t('response')}
