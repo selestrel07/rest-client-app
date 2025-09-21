@@ -5,6 +5,7 @@ import { RequestType } from '@types';
 import { generateCode } from '@utils/generateCode';
 import { userEvent } from '@testing-library/user-event';
 import { NextIntlClientProvider } from 'next-intl';
+import { ReduxProvider } from '@store/Providers';
 
 const request: RequestType = {
   method: 'GET',
@@ -26,7 +27,9 @@ const renderWithIntl = () =>
         },
       }}
     >
-      <CodeGenerator request={request} />
+      <ReduxProvider>
+        <CodeGenerator request={request} />
+      </ReduxProvider>
     </NextIntlClientProvider>
   );
 

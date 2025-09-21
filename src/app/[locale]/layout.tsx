@@ -46,7 +46,7 @@ export default async function RootLayout({
                 <Header locale={locale} />
                 <div
                   id="root"
-                  className="relative flex items-center justify-center w-full h-screen max-h-[calc(100vh-116px)]"
+                  className="relative flex items-center justify-center w-full min-h-[calc(100vh-116px)]"
                 >
                   {children}
                 </div>

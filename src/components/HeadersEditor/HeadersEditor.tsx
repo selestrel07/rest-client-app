@@ -6,9 +6,10 @@ import { useTranslations } from 'next-intl';
 interface HeadersEditorProps {
   headers: Record<string, string>;
   onAdd: (key: string, value: string) => void;
+  isValid: boolean;
 }
 
-export function HeadersEditor({ headers, onAdd }: HeadersEditorProps) {
+export function HeadersEditor({ headers, onAdd, isValid }: HeadersEditorProps) {
   const t = useTranslations('RestClient');
 
   const [key, setKey] = useState('');
@@ -23,23 +24,23 @@ export function HeadersEditor({ headers, onAdd }: HeadersEditorProps) {
   };
 
   return (
-    <div>
+    <div className="w-full">
       <label className="block mb-1 font-medium">{t('headers')}</label>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 w-ful">
         <div className="flex gap-2">
           <input
             type="text"
             placeholder="Key"
             value={key}
             onChange={(e) => setKey(e.target.value)}
-            className="flex-1 px-3 py-2 border border-violet-700 rounded focus:outline-none focus:border-violet-700"
+            className="flex-1 px-3 py-2 border border-violet-700 rounded focus:outline-none focus:border-violet-700 w-[40%]"
           />
           <input
             type="text"
             placeholder="Value"
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            className="flex-1 px-3 py-2 border border-violet-700 rounded focus:outline-none focus:border-violet-700"
+            className="flex-1 px-3 py-2 border border-violet-700 rounded focus:outline-none focus:border-violet-700 w-[40%]"
           />
           <button
             onClick={handleAdd}
@@ -59,6 +60,9 @@ export function HeadersEditor({ headers, onAdd }: HeadersEditorProps) {
             </li>
           ))}
         </ul>
+        {!isValid && (
+          <p className="text-red-500 text-xs"> {t('headersError')}</p>
+        )}
       </div>
     </div>
   );
