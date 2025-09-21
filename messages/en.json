@@ -89,6 +89,7 @@
     "loading": "Loading Content...",
     "latency": "Latency",
     "responseSize": "Response Size",
-    "requestSize": "Request Size"
+    "requestSize": "Request Size",
+    "failedToLoadHistory": "Failed to load request history. Please try again later."
   }
 }
