@@ -56,7 +56,7 @@ const renderWithIntlAndStore = (preloadedState: Record<string, string>) => {
 
 describe('Variables component tests', () => {
   beforeEach(() => {
-    vi.clearAllMocks(); // reset mocks between tests
+    vi.clearAllMocks();
   });
 
   it('Should render correctly', () => {
