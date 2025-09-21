@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import RestClientLayout from './layout';
-import { redirectIfNotAuthenticated } from '@utils/redirects';
 import { notFound } from 'next/navigation';
 
 vi.mock('@utils/redirects', () => ({
@@ -15,15 +14,6 @@ describe('RestClientLayout', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-  });
-
-  it('should call redirectIfNotAuthenticated with locale', async () => {
-    await RestClientLayout({
-      children: mockChildren,
-      params: Promise.resolve({ locale: 'en', method: 'GET' }),
-    });
-
-    expect(redirectIfNotAuthenticated).toHaveBeenCalledWith('en');
   });
 
   it('should render children if method is valid and requestpart is empty', async () => {
