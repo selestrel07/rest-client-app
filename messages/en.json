@@ -78,11 +78,13 @@
     "status": "Status",
     "date": "Date",
     "error": "Error",
-    "details": "Request Details",
     "method": "Method",
     "url": "Url",
     "errorUrl": "Invalid URL",
-    "loading": "Loading Content..."
+    "loading": "Loading Content...",
+    "latency": "Latency",
+    "responseSize": "Response Size",
+    "requestSize": "Request Size"
   },
   
   "VariablesPage": {

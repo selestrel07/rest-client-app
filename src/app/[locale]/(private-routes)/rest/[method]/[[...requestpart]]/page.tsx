@@ -3,11 +3,15 @@ import dynamic from 'next/dynamic';
 const RestClientLazy = dynamic(
   () =>
     import('../../../../../../components/RestClient/RestClient').then(
-      (m) => m.RestClient
+      (mod) => mod.RestClient
     ),
-  { loading: () => <p>Loading...</p> }
+  {
+    loading: () => (
+      <p className="text-center p-4 text-violet-950">Loading REST client...</p>
+    ),
+  }
 );
 
-export default function RestClientPage() {
+export default async function RestDynamicPage() {
   return <RestClientLazy />;
 }
