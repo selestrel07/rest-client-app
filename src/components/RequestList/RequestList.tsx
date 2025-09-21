@@ -74,8 +74,7 @@ export function RequestList() {
           });
 
         setRequests(validRequests);
-      } catch (error) {
-        console.error('Failed to load requests:', error);
+      } catch (_error) {
         dispatch(
           setToastValue({
             type: 'error',
