@@ -52,6 +52,9 @@ const restClientSlice = createSlice({
     clearResponse: (state) => {
       state.response = {} as APIResponse;
     },
+    clearRequest: () => {
+      return { ...initialState };
+    },
   },
 });
 
@@ -64,5 +67,6 @@ export const {
   setIsJson,
   setResponse,
   clearResponse,
+  clearRequest,
 } = restClientSlice.actions;
 export default restClientSlice.reducer;

@@ -54,10 +54,16 @@ export const RestClient: FC = () => {
 
   useEffect(() => {
     dispatch(setMethod(initialMethod));
-    dispatch(setEndpoint(url));
-    dispatch(setBody(initialBody));
+    if (url.length > 0) {
+      dispatch(setEndpoint(url));
+    }
+    if (initialBody.length > 0) {
+      dispatch(setBody(initialBody));
+    }
 
-    dispatch(setHeaders(initialHeaders));
+    if (Object.keys(initialHeaders).length > 0) {
+      dispatch(setHeaders(initialHeaders));
+    }
   }, [initialMethod, url, initialBody, initialHeaders, dispatch]);
 
   const handleMethodChange = (newMethod: string) => {
@@ -113,8 +119,9 @@ export const RestClient: FC = () => {
 
   const isValidUrl = (string: string): boolean => {
     try {
-      new URL(string);
-      return !/{{\w*}}/.test(interpolateString(string, variables));
+      const interpolatedUrl = interpolateString(string, variables);
+      new URL(interpolatedUrl);
+      return !/{{\w*}}/.test(interpolatedUrl);
     } catch {
       return false;
     }
