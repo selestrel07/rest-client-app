@@ -19,10 +19,10 @@ export const CodeGenerator: FC<{ request: RequestType }> = ({ request }) => {
   };
 
   return (
-    <div className="flex flex-col self-end w-1/4 h-dvh gap-2.5 items-start p-2.5">
+    <div className="flex flex-col self-stretch gap-2.5 items-start py-6 w-[300px]">
       <div className="flex justify-between items-center w-full">
         <select
-          className="block border-1 rounded-sm border-violet-700 p-0.5 bg-violet-50 text-violet-950 focus:border-violet-700 cursor-pointer"
+          className="block border-1 rounded-sm border-violet-700 p-0.5 bg-violet-50 text-violet-950 focus:border-violet-700 cursor-pointer focus:outline-0"
           onChange={handleUpdate}
           value={language}
           name="language"
@@ -37,7 +37,7 @@ export const CodeGenerator: FC<{ request: RequestType }> = ({ request }) => {
       </div>
       <pre
         ref={ref}
-        className="text-sm p-2 border-1 border-violet-700 rounded-sm whitespace-pre-wrap break-words h-[calc(100%-150px)] scroll-thin overflow-auto"
+        className="text-sm p-2 border-1 border-violet-700 rounded-sm whitespace-pre-wrap break-words h-full max-h-[411px] scroll-thin overflow-auto w-full"
       >
         {generateCode(language, request)}
       </pre>
