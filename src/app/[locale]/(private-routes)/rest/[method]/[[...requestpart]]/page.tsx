@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic';
 
 const RestClientLazy = dynamic(
   () =>
-    import('../../../../../components/RestClient/RestClient').then(
+    import('../../../../../../components/RestClient/RestClient').then(
       (m) => m.RestClient
     ),
   { loading: () => <p>Loading...</p> }

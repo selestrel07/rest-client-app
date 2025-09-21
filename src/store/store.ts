@@ -1,10 +1,12 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import uiReducer from '@states/uiSlice';
 import toastReducer from '@states/toastSlice';
+import variablesReducer from '@states/variablesSlice';
 
 const rootReducer = combineReducers({
   ui: uiReducer,
   toast: toastReducer,
+  variables: variablesReducer,
 });
 
 export const createStore = (
