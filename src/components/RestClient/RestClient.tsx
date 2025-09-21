@@ -27,6 +27,7 @@ import {
   setResponse,
 } from '@states/restClientSlice';
 import { buildRestUrl } from '@utils/buildRestUrl';
+import { APIResponse } from '@types';
 
 export const RestClient: FC = () => {
   const t = useTranslations('RestClient');
@@ -45,6 +46,8 @@ export const RestClient: FC = () => {
   const router = useRouter();
   const { method, endpoint, headers, body, isJson, response, isLoading } =
     useAppSelector((state) => state.restClient);
+
+  console.log(response);
 
   useEffect(() => {
     dispatch(setMethod(initialMethod));
@@ -70,12 +73,18 @@ export const RestClient: FC = () => {
     });
 
     if (res.result === 'success') {
-      dispatch(
-        setResponse({
-          status: res.status ?? 200,
-          data: res.body ?? '',
-        })
-      );
+      const result: APIResponse =
+        res.status && res.status < 400
+          ? {
+              status: res.status ?? 200,
+              data: res.body ?? '',
+            }
+          : {
+              status: res.status ?? 404,
+              data: '',
+              error: res.body,
+            };
+      dispatch(setResponse(result));
       dispatch(
         setToastValue({
           type: 'success',
@@ -167,7 +176,7 @@ export const RestClient: FC = () => {
             {isLoading ? '...' : t('sendRequest')}
           </button>
 
-          {response && (
+          {Object.keys(response).length && (
             <div className="mt-6 p-4 border border-violet-700 rounded bg-violet-50">
               <h2 className="text-lg font-semibold mb-2 text-gray-700">
                 {t('response')}
