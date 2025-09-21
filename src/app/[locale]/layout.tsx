@@ -37,12 +37,12 @@ export default async function RootLayout({
       <body className="bg-violet-50">
         <ErrorBoundary fallback={<FallbackUI />}>
           <ReduxProvider>
-            <LayoutWrapper
-              locale={locale}
-              user={user}
-              isAuthenticated={userLoggedIn}
-            >
-              <NextIntlClientProvider>
+            <NextIntlClientProvider>
+              <LayoutWrapper
+                locale={locale}
+                user={user}
+                isAuthenticated={userLoggedIn}
+              >
                 <Header locale={locale} />
                 <div
                   id="root"
@@ -52,8 +52,8 @@ export default async function RootLayout({
                 </div>
                 <ToastWrapper />
                 <Footer />
-              </NextIntlClientProvider>
-            </LayoutWrapper>
+              </LayoutWrapper>
+            </NextIntlClientProvider>
           </ReduxProvider>
         </ErrorBoundary>
       </body>
