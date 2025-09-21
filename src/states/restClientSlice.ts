@@ -1,8 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { APIResponse } from '@types';
 
-export type HeaderItem = { key: string; value: string };
-
 interface RestClientState {
   method: string;
   endpoint: string;
@@ -33,7 +31,7 @@ const restClientSlice = createSlice({
     setEndpoint: (state, action: PayloadAction<string>) => {
       state.endpoint = action.payload;
     },
-    addHeader: (state, action: PayloadAction<HeaderItem>) => {
+    addHeader: (state, action: PayloadAction<Record<string, string>>) => {
       state.headers = Object.fromEntries([
         ...Object.entries(state.headers),
         ...Object.entries(action.payload),

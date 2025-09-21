@@ -28,6 +28,10 @@ import {
 } from '@states/restClientSlice';
 import { buildRestUrl } from '@utils/buildRestUrl';
 import { APIResponse } from '@types';
+import {
+  interpolatePlainObject,
+  interpolateString,
+} from '@utils/interpolateVariables';
 
 export const RestClient: FC = () => {
   const t = useTranslations('RestClient');
@@ -43,11 +47,10 @@ export const RestClient: FC = () => {
     [searchParams]
   );
   const dispatch = useAppDispatch();
+  const variables = useAppSelector((state) => state.variables.value);
   const router = useRouter();
   const { method, endpoint, headers, body, isJson, response, isLoading } =
     useAppSelector((state) => state.restClient);
-
-  console.log(response);
 
   useEffect(() => {
     dispatch(setMethod(initialMethod));
@@ -64,13 +67,17 @@ export const RestClient: FC = () => {
     router.replace(url);
   };
 
+  const interpolateRequestParameters = useMemo(() => {
+    return {
+      method: interpolateString(method, variables),
+      body: interpolateString(body, variables),
+      headers: interpolatePlainObject(headers, variables),
+      url: interpolateString(endpoint, variables),
+    };
+  }, [method, body, headers, endpoint]);
+
   const handleSubmit = async () => {
-    const res = await processRequest({
-      method,
-      body,
-      headers,
-      url: endpoint,
-    });
+    const res = await processRequest(interpolateRequestParameters);
 
     if (res.result === 'success') {
       const result: APIResponse =
@@ -100,39 +107,40 @@ export const RestClient: FC = () => {
       );
     }
 
-    const newUrl = buildRestUrl({
-      method,
-      url: endpoint,
-      headers,
-      body,
-    });
+    const newUrl = buildRestUrl(interpolateRequestParameters);
     router.replace(newUrl);
   };
 
   const isValidUrl = (string: string): boolean => {
     try {
       new URL(string);
-      return true;
+      return !/{{\w*}}/.test(interpolateString(string, variables));
     } catch {
       return false;
     }
   };
 
   const isBodyValid =
-    !isJson ||
-    body === '' ||
-    (() => {
-      try {
-        if (!body.trim()) return true;
-        JSON.parse(body);
-        return true;
-      } catch {
-        return false;
-      }
-    })();
+    (!isJson ||
+      body === '' ||
+      (() => {
+        try {
+          if (!body.trim()) return true;
+          JSON.parse(body);
+          return true;
+        } catch {
+          return false;
+        }
+      })()) &&
+    !/{{\w*}}/.test(interpolateString(body, variables));
+
+  const isHeadersValid =
+    Object.keys(interpolatePlainObject(headers, variables)).length ===
+    Object.keys(headers).length;
 
   const isEndpointValid = !endpoint || isValidUrl(endpoint);
-  const canSend = !!endpoint && isEndpointValid && isBodyValid;
+  const canSend =
+    !!endpoint && isEndpointValid && isBodyValid && isHeadersValid;
 
   return (
     <div className="p-6 max-w-4xl space-y-6 self-start">
@@ -145,12 +153,14 @@ export const RestClient: FC = () => {
             <EndpointInput
               value={endpoint}
               onChange={(val) => dispatch(setEndpoint(val))}
+              isValid={isValidUrl(endpoint)}
             />
           </div>
 
           <HeadersEditor
             headers={headers}
-            onAdd={(k, v) => dispatch(addHeader({ key: k, value: v }))}
+            onAdd={(k, v) => dispatch(addHeader({ [k]: v }))}
+            isValid={isHeadersValid}
           />
 
           <BodyEditor
@@ -176,14 +186,14 @@ export const RestClient: FC = () => {
             {isLoading ? '...' : t('sendRequest')}
           </button>
 
-          {Object.keys(response).length && (
+          {Object.keys(response).length > 0 ? (
             <div className="mt-6 p-4 border border-violet-700 rounded bg-violet-50">
               <h2 className="text-lg font-semibold mb-2 text-gray-700">
                 {t('response')}
               </h2>
               <ResponseViewer data={response} />
             </div>
-          )}
+          ) : undefined}
         </div>
         <CodeGenerator
           request={{

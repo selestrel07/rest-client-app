@@ -18,14 +18,14 @@ describe('EndpointInput', () => {
   });
 
   it('renders input with placeholder', () => {
-    render(<EndpointInput value="" onChange={onChange} />);
+    render(<EndpointInput value="" onChange={onChange} isValid={true} />);
 
     const input = screen.getByPlaceholderText('https://api.example.com/users');
     expect(input).toBeInTheDocument();
   });
 
   it('calls onChange on input change', () => {
-    render(<EndpointInput value="" onChange={onChange} />);
+    render(<EndpointInput value="" onChange={onChange} isValid={true} />);
 
     const input = screen.getByPlaceholderText('https://api.example.com/users');
     fireEvent.change(input, { target: { value: 'https://test.com' } });
@@ -35,7 +35,11 @@ describe('EndpointInput', () => {
 
   it('displays current value', () => {
     render(
-      <EndpointInput value="https://my-api.com/data" onChange={onChange} />
+      <EndpointInput
+        value="https://my-api.com/data"
+        onChange={onChange}
+        isValid={true}
+      />
     );
 
     const input = screen.getByDisplayValue('https://my-api.com/data');
@@ -43,14 +47,20 @@ describe('EndpointInput', () => {
   });
 
   it('shows green border for valid URL', () => {
-    render(<EndpointInput value="https://example.com" onChange={onChange} />);
+    render(
+      <EndpointInput
+        value="https://example.com"
+        onChange={onChange}
+        isValid={true}
+      />
+    );
 
     const input = screen.getByDisplayValue('https://example.com');
     expect(input).toHaveClass('border-green-500');
   });
 
   it('has no error and gray border when empty', () => {
-    render(<EndpointInput value="" onChange={onChange} />);
+    render(<EndpointInput value="" onChange={onChange} isValid={true} />);
 
     const input = screen.getByPlaceholderText('https://api.example.com/users');
     expect(input).toHaveClass('border-gray-300');

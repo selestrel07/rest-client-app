@@ -5,9 +5,12 @@ import { SupportedLanguages, RequestType } from '@types';
 import { generateCode } from '@utils/generateCode';
 import { supportedLanguages } from '@data/supported-languages';
 import { ButtonCopy } from '@components';
+import { useAppSelector } from '../../hooks/useAppStore';
+import { interpolateRequest } from '@utils/interpolateVariables';
 
 export const CodeGenerator: FC<{ request: RequestType }> = ({ request }) => {
   const [language, setLanguage] = useState<SupportedLanguages>('curl');
+  const variables = useAppSelector((state) => state.variables.value);
   const ref = useRef<HTMLPreElement>(null);
   const handleUpdate = (e: ChangeEvent<HTMLSelectElement>) => {
     setLanguage(e.target.value as SupportedLanguages);
@@ -39,7 +42,7 @@ export const CodeGenerator: FC<{ request: RequestType }> = ({ request }) => {
         ref={ref}
         className="text-sm p-2 border-1 border-violet-700 rounded-sm whitespace-pre-wrap break-words h-full max-h-[411px] scroll-thin overflow-auto w-full"
       >
-        {generateCode(language, request)}
+        {generateCode(language, interpolateRequest(request, variables ?? {}))}
       </pre>
     </div>
   );
