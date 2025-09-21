@@ -1,9 +1,21 @@
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  cleanup,
+  waitFor,
+} from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import uiReducer, { UiState } from '../../states/uiSlice';
 import { Header } from './Header';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
+import { userEvent } from '@testing-library/user-event';
+import { removeAuthCookie } from '@actions/auth-actions';
+
+vi.mock('@actions/auth-actions', () => ({
+  removeAuthCookie: vi.fn(),
+}));
 
 vi.mock('next-intl', () => ({
   useTranslations: () => (key: string) => {
@@ -88,7 +100,8 @@ describe('Header component', () => {
     expect(header.className).toContain('shadow-2xl');
   });
 
-  it('dispatches signOut when button clicked', () => {
+  it('dispatches signOut when button clicked', async () => {
+    (removeAuthCookie as Mock).mockResolvedValue(undefined);
     const store = configureStore({
       reducer: { ui: uiReducer },
       preloadedState: {
@@ -102,8 +115,13 @@ describe('Header component', () => {
       </Provider>
     );
 
-    fireEvent.click(screen.getByText('Sign out'));
-    expect(store.getState().ui.isAuthenticated).toBe(false);
+    await userEvent.click(screen.getByText('Sign out'));
+    await waitFor(
+      () => expect(store.getState().ui.isAuthenticated).toBe(false),
+      {
+        timeout: 2000,
+      }
+    );
   });
 
   it('removes event listener on unmount', () => {

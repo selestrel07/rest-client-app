@@ -1,18 +1,20 @@
 'use client';
 
 import { Provider } from 'react-redux';
-import { ReactNode, useMemo } from 'react';
-import { createStore } from '@store/store';
+import { ReactNode } from 'react';
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistor, store } from './store';
 
 interface ReduxProviderProps {
   children: ReactNode;
-  preloadedState?: Parameters<typeof createStore>[0];
 }
 
-export function ReduxProvider({
-  children,
-  preloadedState,
-}: ReduxProviderProps) {
-  const store = useMemo(() => createStore(preloadedState), []);
-  return <Provider store={store}>{children}</Provider>;
+export function ReduxProvider({ children }: ReduxProviderProps) {
+  return (
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        {children}
+      </PersistGate>
+    </Provider>
+  );
 }

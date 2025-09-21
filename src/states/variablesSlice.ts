@@ -12,7 +12,7 @@ const variablesSlice = createSlice({
       state,
       { payload }: PayloadAction<Record<string, string>>
     ) => {
-      state.value = payload;
+      state.value = { ...payload };
     },
     clearVariables: (state) => {
       state.value = {};

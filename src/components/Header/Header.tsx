@@ -32,9 +32,9 @@ export const Header: FC<{ locale: 'en' | 'ru' }> = ({ locale }) => {
   }, []);
 
   const handleSignOut = async () => {
-    dispatch(signOut());
     try {
       await removeAuthCookie();
+      dispatch(signOut());
       dispatch(
         setToastValue({
           message: 'Logged out',

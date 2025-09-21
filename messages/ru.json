@@ -67,5 +67,10 @@
   "Messages" : {
     "requestSuccess": "Запрос успешно обработан",
     "requestError": "Ошибка выполнения запроса. Причина: {error}"
+  },
+  "VariablesPage": {
+    "name": "Имя: ",
+    "value": "Значение: ",
+    "add": "Добавить"
   }
 }

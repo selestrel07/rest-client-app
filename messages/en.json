@@ -67,5 +67,10 @@
   "Messages" : {
     "requestSuccess": "Request processed successfully",
     "requestError": "Failed to fetch. Reason: {error}"
+  },
+  "VariablesPage": {
+    "name": "Name: ",
+    "value": "Value: ",
+    "add": "Add"
   }
 }
