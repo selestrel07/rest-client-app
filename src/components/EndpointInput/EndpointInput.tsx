@@ -1,4 +1,5 @@
 import { useTranslations } from 'next-intl';
+import { ChangeEvent } from 'react';
 
 interface EndpointInputProps {
   value: string;
@@ -10,13 +11,13 @@ export function EndpointInput({ value, onChange }: EndpointInputProps) {
 
   const isValid = value === '' || isValidUrl(value);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
   return (
     <div className="space-y-2">
       <label className="block text-sm font-medium text-gray-700">
-        Endpoint
+        {t('endpoint')}
       </label>
       <input
         type="text"
