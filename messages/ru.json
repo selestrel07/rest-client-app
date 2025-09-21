@@ -64,13 +64,15 @@
       "matchPasswords": "Пароли не совпадают"
     }
   },
-
-  "Messages": {
+  "Messages" : {
     "requestSuccess": "Запрос успешно обработан",
     "requestError": "Ошибка выполнения запроса. Причина: {error}"
   },
-
-
+  "VariablesPage": {
+    "name": "Имя: ",
+    "value": "Значение: ",
+    "add": "Добавить"
+  },
   "History": {
     "noRequests": "Вы ещё не выполнили запросы",
     "tryRestClient": "Попробуйте создать первый запрос в REST клиенте.",
@@ -87,11 +89,5 @@
     "latency": "Задержка",
     "responseSize": "Размер ответа",
     "requestSize": "Размер запроса"
-  },
-
-  "VariablesPage": {
-    "name": "Имя: ",
-    "value": "Значение: ",
-    "add": "Добавить"
   }
 }

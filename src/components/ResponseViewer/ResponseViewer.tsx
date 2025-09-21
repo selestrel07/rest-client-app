@@ -18,7 +18,7 @@ export function ResponseViewer({ data }: { data: APIResponse }) {
     <div className="w-full">
       <div className="text-sm text-gray-600">Status: {data.status}</div>
       <pre className="p-4 bg-violet-100 rounded overflow-auto w-full text-sm whitespace-pre-wrap scroll-thin max-h-[50vh]">
-        {typeof data.data === 'string' && isValidJson(data.data)
+        {isValidJson(data.data)
           ? prettifyJson(data.data)
           : JSON.stringify(data.data, null, 2)}
       </pre>

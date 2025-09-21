@@ -64,11 +64,15 @@
       "matchPasswords": "Passwords must match"
     }
   },
-  "Messages": {
+  "Messages" : {
     "requestSuccess": "Request processed successfully",
     "requestError": "Failed to fetch. Reason: {error}"
   },
-
+  "VariablesPage": {
+    "name": "Name: ",
+    "value": "Value: ",
+    "add": "Add"
+  },
   "History": {
     "noRequests": "You have not yet executed requests",
     "tryRestClient": "Try creating your first request in the REST Client.",
@@ -85,11 +89,5 @@
     "latency": "Latency",
     "responseSize": "Response Size",
     "requestSize": "Request Size"
-  },
-  
-  "VariablesPage": {
-    "name": "Name: ",
-    "value": "Value: ",
-    "add": "Add"
   }
 }
