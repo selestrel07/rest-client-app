@@ -1,68 +1,59 @@
 'use client';
 
-import { FC, useState, useEffect } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
-import { convertUrlToRequest } from '@utils/requestUrlConverter';
-import { MethodSelector } from '@components';
-import { EndpointInput } from '@components';
-import { HeadersEditor } from '@components';
-import { BodyEditor } from '@components';
-import { ResponseViewer } from '@components';
+import { FC } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '../../store/store';
+import {
+  setMethod,
+  setEndpoint,
+  addHeader,
+  setBody,
+  setIsJson,
+  sendRequest,
+  clearResponse,
+} from '../../states/restClientSlice';
+import {
+  MethodSelector,
+  EndpointInput,
+  HeadersEditor,
+  BodyEditor,
+  ResponseViewer,
+} from '@components';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@i18n/navigation';
 import { buildRestUrl } from '@utils/buildRestUrl';
 
-type APIResponse = { error: string } | { status: number; data: unknown } | null;
-
 export const RestClient: FC = () => {
   const t = useTranslations('RestClient');
-  const params = useParams();
-  const searchParams = useSearchParams();
-  const initialRequest = convertUrlToRequest(params, searchParams);
-
-  const [method, setMethod] = useState<string>(initialRequest.method || 'GET');
-  const [endpoint, setEndpoint] = useState<string>(initialRequest.url || '');
-  const [headers, setHeaders] = useState<{ key: string; value: string }[]>(
-    Object.entries(initialRequest.headers || {}).map(([key, value]) => ({
-      key,
-      value,
-    }))
-  );
-  const [body, setBody] = useState<string>(initialRequest.body || '');
-  const [isJson, setIsJson] = useState<boolean>(true);
-  const [response, setResponse] = useState<APIResponse>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
-  useEffect(() => {
-    const headersObject = headers.reduce(
-      (acc, h) => {
-        if (h.key) acc[h.key] = h.value;
-        return acc;
-      },
-      {} as Record<string, string>
-    );
+  const { method, endpoint, headers, body, isJson, response, isLoading } =
+    useSelector((state: RootState) => state.restClient);
 
+  const handleMethodChange = (newMethod: string) => {
+    dispatch(setMethod(newMethod));
+    dispatch(clearResponse());
+    const url = buildRestUrl({ method: newMethod, url: '' });
+    router.replace(url);
+  };
+
+  const handleSubmit = () => {
+    dispatch(sendRequest({ method, endpoint, headers, body }));
     const newUrl = buildRestUrl({
       method,
       url: endpoint,
+      headers: headers.reduce(
+        (acc, h) => {
+          if (h.key) acc[h.key] = h.value;
+          return acc;
+        },
+        {} as Record<string, string>
+      ),
       body,
-      headers: headersObject,
     });
-
     router.replace(newUrl);
-  }, [method, endpoint, body, headers, router]);
-
-  useEffect(() => {
-    const newRequest = convertUrlToRequest(params, searchParams);
-    if (newRequest.url && newRequest.url !== endpoint)
-      setEndpoint(newRequest.url);
-    if (newRequest.method && newRequest.method !== method)
-      setMethod(newRequest.method);
-    if (newRequest.body !== undefined && newRequest.body !== body)
-      setBody(newRequest.body);
-  }, [params, searchParams]);
+  };
 
   const isValidUrl = (string: string): boolean => {
     try {
@@ -89,83 +80,49 @@ export const RestClient: FC = () => {
   const isEndpointValid = !endpoint || isValidUrl(endpoint);
   const canSend = !!endpoint && isEndpointValid && isBodyValid;
 
-  const handleSubmit = async () => {
-    if (!canSend || isLoading) return;
-
-    setIsLoading(true);
-    try {
-      const res = await fetch(endpoint, {
-        method,
-        headers: headers.reduce(
-          (acc, h) => {
-            acc[h.key] = h.value;
-            return acc;
-          },
-          {} as Record<string, string>
-        ),
-        body: method === 'GET' || !body ? undefined : body,
-      });
-
-      const data = await res.json();
-      setResponse({ status: res.status, data });
-    } catch (err) {
-      setResponse({
-        error: err instanceof Error ? err.message : 'Unknown error',
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       <h1 className="text-2xl font-bold text-gray-800">{t('title')}</h1>
+      <MethodSelector value={method} onChange={handleMethodChange} />
+      <EndpointInput
+        value={endpoint}
+        onChange={(val) => dispatch(setEndpoint(val))}
+      />
+      <HeadersEditor
+        headers={headers}
+        onAdd={(k, v) => dispatch(addHeader({ key: k, value: v }))}
+      />
+      <BodyEditor
+        value={body}
+        onChange={(val) => dispatch(setBody(val))}
+        isJson={isJson}
+        onModeChange={(val) => dispatch(setIsJson(val))}
+      />
 
-      <div className="space-y-6">
-        <MethodSelector value={method} onChange={setMethod} />
+      {!isBodyValid && isJson && body && (
+        <p className="text-red-500 text-sm">{t('invalidJson')}</p>
+      )}
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2"></label>
-          <EndpointInput value={endpoint} onChange={setEndpoint} />
+      <button
+        onClick={handleSubmit}
+        disabled={!canSend || isLoading}
+        className={`px-4 py-2 rounded transition-colors ${
+          !canSend || isLoading
+            ? 'bg-gray-300 cursor-not-allowed text-gray-500'
+            : 'bg-violet-500 hover:bg-violet-600 text-white'
+        }`}
+      >
+        {isLoading ? '...' : t('sendRequest')}
+      </button>
+
+      {response && (
+        <div className="mt-6 p-4 border border-violet-700 rounded bg-violet-50">
+          <h2 className="text-lg font-semibold mb-2 text-gray-700">
+            {t('response')}
+          </h2>
+          <ResponseViewer data={response} />
         </div>
-
-        <HeadersEditor
-          headers={headers}
-          onAdd={(key, value) => setHeaders([...headers, { key, value }])}
-        />
-
-        <BodyEditor
-          value={body}
-          onChange={setBody}
-          isJson={isJson}
-          onModeChange={setIsJson}
-        />
-
-        {!isBodyValid && isJson && body && (
-          <p className="text-red-500 text-sm">{t('invalidJson')}</p>
-        )}
-
-        <button
-          onClick={handleSubmit}
-          disabled={!canSend || isLoading}
-          className={`px-4 py-2 rounded transition-colors ${
-            !canSend || isLoading
-              ? 'bg-gray-300 cursor-not-allowed text-gray-500'
-              : 'bg-violet-500 hover:bg-violet-600 text-white'
-          }`}
-        >
-          {isLoading ? '...' : t('sendRequest')}
-        </button>
-
-        {response && (
-          <div className="mt-6 p-4 border border-violet-700 rounded bg-violet-50">
-            <h2 className="text-lg font-semibold mb-2 text-gray-700">
-              {t('response')}
-            </h2>
-            <ResponseViewer data={response} />
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 };

@@ -12,9 +12,11 @@ export function decodeBase64(value: string | undefined): string {
 
 export function buildQuery(headers: Record<string, string>): string {
   const params = new URLSearchParams();
-  Object.entries(headers).forEach(([key, value]) => {
-    params.append(key, value);
-  });
+  Object.entries(headers)
+    .filter(([key]) => key.trim())
+    .forEach(([key, value]) => {
+      params.append(key, value);
+    });
   return params.toString();
 }
 
@@ -22,7 +24,7 @@ export function parseQuery(query: string): Record<string, string> {
   const params = new URLSearchParams(query);
   const headers: Record<string, string> = {};
   params.forEach((value, key) => {
-    headers[key] = value;
+    if (key.trim()) headers[key] = value;
   });
   return headers;
 }

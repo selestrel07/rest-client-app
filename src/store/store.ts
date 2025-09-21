@@ -1,10 +1,12 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import uiReducer from '@states/uiSlice';
 import toastReducer from '@states/toastSlice';
+import restClientReducer from '@states/restClientSlice';
 
 const rootReducer = combineReducers({
   ui: uiReducer,
   toast: toastReducer,
+  restClient: restClientReducer,
 });
 
 export const createStore = (
