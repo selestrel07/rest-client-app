@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { APIResponse } from '@types';
 
-interface RestClientState {
+export interface RestClientState {
   method: string;
   endpoint: string;
   headers: Record<string, string>;

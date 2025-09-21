@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-type VariablesState = {
+export type VariablesState = {
   value: Record<string, string>;
 };
 

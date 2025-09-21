@@ -62,4 +62,18 @@ describe('RestClientLayout', () => {
 
     expect(notFound).not.toHaveBeenCalled();
   });
+
+  it('should render children if requestpart is undefined', async () => {
+    const result = await RestClientLayout({
+      children: mockChildren,
+      params: Promise.resolve({
+        locale: 'en',
+        method: 'GET',
+        requestpart: undefined,
+      }),
+    });
+
+    expect(result?.props.children).toEqual(mockChildren);
+    expect(notFound).not.toHaveBeenCalled();
+  });
 });
