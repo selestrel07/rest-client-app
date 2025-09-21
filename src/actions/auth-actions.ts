@@ -3,7 +3,7 @@
 import {
   loginWithEmailAndPassword,
   registerUserWithEmailAndPassword,
-} from '../services/firebase.service';
+} from '@services/firebase.service';
 import { cookies } from 'next/headers';
 import { User } from '@firebase/auth';
 import { UserAuth } from '@types';
