@@ -4,12 +4,15 @@ import { ChangeEvent } from 'react';
 interface EndpointInputProps {
   value: string;
   onChange: (value: string) => void;
+  isValid: boolean;
 }
 
-export function EndpointInput({ value, onChange }: EndpointInputProps) {
+export function EndpointInput({
+  value,
+  onChange,
+  isValid,
+}: EndpointInputProps) {
   const t = useTranslations('RestClient');
-
-  const isValid = value === '' || isValidUrl(value);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
@@ -37,13 +40,4 @@ export function EndpointInput({ value, onChange }: EndpointInputProps) {
       )}
     </div>
   );
-}
-
-function isValidUrl(string: string): boolean {
-  try {
-    new URL(string);
-    return true;
-  } catch {
-    return false;
-  }
 }

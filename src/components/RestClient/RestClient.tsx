@@ -13,9 +13,13 @@ import {
 } from '@components';
 import { useTranslations } from 'next-intl';
 import { processRequest } from '@actions/request-actions';
-import { useAppDispatch } from '../../hooks/useAppStore';
+import { useAppDispatch, useAppSelector } from '../../hooks/useAppStore';
 import { setToastValue } from '@states/toastSlice';
 import { APIResponse } from '@types';
+import {
+  interpolatePlainObject,
+  interpolateString,
+} from '@utils/interpolateVariables';
 
 export const RestClient: FC = () => {
   const t = useTranslations('RestClient');
@@ -34,6 +38,7 @@ export const RestClient: FC = () => {
   const [response, setResponse] = useState<APIResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useAppDispatch();
+  const variables = useAppSelector((state) => state.variables.value);
 
   useEffect(() => {
     const newRequest = convertUrlToRequest(params, searchParams);
@@ -48,37 +53,43 @@ export const RestClient: FC = () => {
   const isValidUrl = (string: string): boolean => {
     try {
       new URL(string);
-      return true;
+      return !/{{\w*}}/.test(interpolateString(string, variables));
     } catch {
       return false;
     }
   };
 
   const isBodyValid =
-    !isJson ||
-    body === '' ||
-    (() => {
-      try {
-        if (!body.trim()) return true;
-        JSON.parse(body);
-        return true;
-      } catch {
-        return false;
-      }
-    })();
+    (!isJson ||
+      body === '' ||
+      (() => {
+        try {
+          if (!body.trim()) return true;
+          JSON.parse(body);
+          return true;
+        } catch {
+          return false;
+        }
+      })()) &&
+    !/{{\w*}}/.test(interpolateString(body, variables));
+
+  const isHeadersValid =
+    Object.keys(interpolatePlainObject(headers, variables)).length ===
+    Object.keys(headers).length;
 
   const isEndpointValid = !endpoint || isValidUrl(endpoint);
-  const canSend = !!endpoint && isEndpointValid && isBodyValid;
+  const canSend =
+    !!endpoint && isEndpointValid && isBodyValid && isHeadersValid;
 
   const handleSubmit = async () => {
     if (!canSend || isLoading) return;
 
     setIsLoading(true);
     const res = await processRequest({
-      method,
-      body,
-      headers,
-      url: endpoint,
+      method: interpolateString(method, variables),
+      body: interpolateString(body, variables),
+      headers: interpolatePlainObject(headers, variables),
+      url: interpolateString(endpoint, variables),
     });
 
     if (res.result === 'success') {
@@ -113,7 +124,11 @@ export const RestClient: FC = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2"></label>
-            <EndpointInput value={endpoint} onChange={setEndpoint} />
+            <EndpointInput
+              value={endpoint}
+              onChange={setEndpoint}
+              isValid={isValidUrl(endpoint)}
+            />
           </div>
 
           <HeadersEditor
@@ -124,6 +139,7 @@ export const RestClient: FC = () => {
                 [key]: value,
               })
             }
+            isValid={isHeadersValid}
           />
 
           <BodyEditor

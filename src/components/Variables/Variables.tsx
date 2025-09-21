@@ -57,7 +57,7 @@ export const Variables: FC = () => {
   };
 
   return (
-    <div className="w-screen max-w-[600px] flex flex-col justify-start h-full py-6">
+    <div className="w-screen max-w-[600px] flex flex-col justify-start h-full min-h-[calc(100vh-116px)] py-6">
       <h1 className="text-2xl font-bold text-gray-800">Variables</h1>
       <AddItem addHandlerAction={handleVariableAdd} />
       <div className=" flex flex-col gap-2.5 scroll-thin border-4 border-violet-700 rounded-sm p-6 max-h-[calc(100%-60px)] overflow-auto">
