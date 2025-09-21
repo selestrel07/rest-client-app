@@ -6,20 +6,19 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { convertRequestToUrl } from '@utils/requestUrlConverter';
-import { RequestHistory } from '@types';
+import { RequestData } from '@types';
+import { routesList } from '@data/routes-list';
+import { useLocale } from 'next-intl';
+import { useAppDispatch } from '../../hooks/useAppStore';
+import { setToastValue } from '@states/toastSlice';
+import { methods } from '@data/supported-methods';
 
 export function RequestList() {
   const t = useTranslations('History');
-  const [requests, setRequests] = useState<RequestHistory[]>([]);
+  const [requests, setRequests] = useState<RequestData[]>([]);
   const [loading, setLoading] = useState(true);
   const locale = useLocale();
-
-  function useLocale(): string {
-    if (typeof window === 'undefined') return 'en';
-    const pathname = window.location.pathname;
-    const match = pathname.match(/^\/([a-z]{2})\//);
-    return match ? match[1] : 'en';
-  }
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const load = async () => {
@@ -32,6 +31,7 @@ export function RequestList() {
         }
 
         const rawData = await loadRequestData(userId);
+
         if (!Array.isArray(rawData)) {
           setRequests([]);
           setLoading(false);
@@ -39,44 +39,49 @@ export function RequestList() {
         }
 
         const validRequests = rawData
-          .map((req): RequestHistory | null => {
-            if (typeof req !== 'object' || req === null) return null;
-
-            const timestamp =
-              typeof req.timestamp === 'string'
-                ? new Date(req.timestamp).getTime()
-                : Number(req.timestamp);
-
-            const isValidNumber = (n: unknown): n is number =>
-              typeof n === 'number' && !isNaN(n);
+          .map((req): RequestData | null => {
+            if (
+              typeof req !== 'object' ||
+              req === null ||
+              !req.method ||
+              !req.url
+            ) {
+              return null;
+            }
 
             return {
-              method: typeof req.method === 'string' ? req.method : 'GET',
-              url: typeof req.url === 'string' ? req.url : '',
-              timestamp: isValidNumber(timestamp) ? timestamp : Date.now(),
-              latency: isValidNumber(req.latency) ? req.latency : 0,
-              status: isValidNumber(req.status) ? req.status : 0,
-              requestSize: isValidNumber(req.requestSize) ? req.requestSize : 0,
-              responseSize: isValidNumber(req.responseSize)
-                ? req.responseSize
-                : 0,
-              errorType:
-                req.errorType === null || typeof req.errorType === 'string'
-                  ? req.errorType
-                  : null,
-              headers:
-                typeof req.headers === 'object' && req.headers !== null
-                  ? (req.headers as Record<string, string>)
-                  : undefined,
-              body: typeof req.body === 'string' ? req.body : undefined,
-            };
+              ...req,
+              timestamp: req.timestamp || Date.now(),
+              errorType: req.errorType ?? null,
+              headers: req.headers || {},
+              body: req.body || '',
+            } as RequestData;
           })
-          .filter((req): req is RequestHistory => req !== null)
-          .sort((a, b) => b.timestamp - a.timestamp);
+
+          .filter((req): req is RequestData => req !== null)
+          .sort((a, b) => {
+            const timeA =
+              typeof a.timestamp === 'string'
+                ? new Date(a.timestamp).getTime()
+                : (a.timestamp ?? 0);
+
+            const timeB =
+              typeof b.timestamp === 'string'
+                ? new Date(b.timestamp).getTime()
+                : (b.timestamp ?? 0);
+
+            return timeB - timeA;
+          });
 
         setRequests(validRequests);
       } catch (error) {
         console.error('Failed to load requests:', error);
+        dispatch(
+          setToastValue({
+            type: 'error',
+            message: t('failedToLoadHistory'),
+          })
+        );
         setRequests([]);
       } finally {
         setLoading(false);
@@ -84,7 +89,7 @@ export function RequestList() {
     };
 
     load();
-  }, []);
+  }, [dispatch]);
 
   if (loading) {
     return <p className="text-center p-4">Loading request history...</p>;
@@ -97,7 +102,7 @@ export function RequestList() {
           <h1 className="text-2xl font-bold mb-4">{t('noRequests')}</h1>
           <p className="mb-6">{t('tryRestClient')}</p>
           <Link
-            href={`/${locale}/rest`}
+            href={`/${locale}/${routesList.client}/${methods.GET}`}
             className="inline-block px-6 py-2 bg-violet-500 hover:bg-violet-600 text-white rounded transition-colors"
           >
             {t('restClient')}
@@ -116,9 +121,13 @@ export function RequestList() {
             const isFailed = req.status >= 400 || req.errorType;
 
             const pathSuffix = convertRequestToUrl(req);
-            const href = `/${locale}/rest/${req.method}${pathSuffix}`;
+            const href = `/${locale}/${routesList.client}/${req.method}${pathSuffix}`;
 
-            const date = new Date(req.timestamp);
+            const date =
+              typeof req.timestamp === 'string'
+                ? new Date(req.timestamp)
+                : new Date(req.timestamp ?? Date.now());
+
             const formattedDate = date.toLocaleDateString();
             const formattedTime = date.toLocaleTimeString();
 
