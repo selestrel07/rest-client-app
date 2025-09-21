@@ -4,11 +4,13 @@ import toastReducer from '@states/toastSlice';
 import variablesReducer from '@states/variablesSlice';
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
+import restClientReducer from '@states/restClientSlice';
 
 const rootReducer = combineReducers({
   ui: uiReducer,
   toast: toastReducer,
   variables: variablesReducer,
+  restClient: restClientReducer,
 });
 
 const persistConfig = {

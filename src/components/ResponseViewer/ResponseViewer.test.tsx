@@ -1,35 +1,32 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach, MockedFunction } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { ResponseViewer } from './ResponseViewer';
-
-// Мокаем утилиты
-vi.mock('@utils/isValidJson', () => ({
-  isValidJson: vi.fn(),
-}));
-vi.mock('@utils/prettifyJson', () => ({
-  prettifyJson: vi.fn(),
-}));
-
-import { isValidJson } from '@utils/isValidJson';
+import { APIResponse } from '@types';
 
 describe('ResponseViewer', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+  it('should display error message when error is present', () => {
+    const errorData = {
+      status: 500,
+      error: 'Something went wrong',
+    } as APIResponse;
+
+    render(<ResponseViewer data={errorData} />);
+
+    const errorText = screen.getByText('Something went wrong');
+    expect(errorText).toBeInTheDocument();
+    expect(errorText.closest('pre')).toHaveClass('text-red-700');
   });
 
-  it('renders status', () => {
-    (isValidJson as MockedFunction<typeof isValidJson>).mockReturnValue(false);
+  it('should display formatted JSON response', () => {
+    const successData = {
+      status: 200,
+      data: '{"message": "Success", "id": 123}',
+    } as APIResponse;
 
-    render(<ResponseViewer data={{ status: 200, data: 'ok' }} />);
+    render(<ResponseViewer data={successData} />);
 
-    expect(screen.getByText(/Status: 200/)).toBeInTheDocument();
-  });
-
-  it('renders raw data when not valid JSON', () => {
-    (isValidJson as MockedFunction<typeof isValidJson>).mockReturnValue(false);
-
-    render(<ResponseViewer data={{ status: 404, data: 'Not Found' }} />);
-
-    expect(screen.getByText('Not Found')).toBeInTheDocument();
+    const pre = screen.getByText(/"message": "Success"/);
+    expect(pre).toBeInTheDocument();
+    expect(pre.closest('pre')).toHaveClass('bg-violet-100');
   });
 });

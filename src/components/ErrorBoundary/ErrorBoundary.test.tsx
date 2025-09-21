@@ -1,35 +1,50 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ErrorBoundary } from './ErrorBoundary';
+import { describe, it, expect, vi } from 'vitest';
+import { ErrorBoundary } from '@components';
 
-const Fallback = () => <div data-testid="fallback">Something went wrong</div>;
-const SafeChild = () => <div data-testid="safe-child">Hello</div>;
-const ErrorChild = () => {
-  throw new Error('Boom!');
+const FallbackUI = <div data-testid="fallback">Something went wrong.</div>;
+
+const ThrowingComponent = () => {
+  throw new Error('Test error');
 };
 
-describe('ErrorBoundary', () => {
-  beforeEach(() => {
-    vi.spyOn(console, 'error').mockImplementation(() => {});
-  });
+console.error = vi.fn();
 
-  it('renders children when no error', () => {
+describe('ErrorBoundary', () => {
+  it('should render children by default', () => {
     render(
-      <ErrorBoundary fallback={<Fallback />}>
-        <SafeChild />
+      <ErrorBoundary fallback={FallbackUI}>
+        <div>Hello World</div>
       </ErrorBoundary>
     );
 
-    expect(screen.getByTestId('safe-child')).toBeInTheDocument();
+    expect(screen.getByText('Hello World')).toBeInTheDocument();
+    expect(screen.queryByTestId('fallback')).not.toBeInTheDocument();
   });
 
-  it('renders fallback when child throws error', () => {
+  it('should catch an error and render fallback UI', () => {
     render(
-      <ErrorBoundary fallback={<Fallback />}>
-        <ErrorChild />
+      <ErrorBoundary fallback={FallbackUI}>
+        <ThrowingComponent />
       </ErrorBoundary>
     );
 
     expect(screen.getByTestId('fallback')).toBeInTheDocument();
+    expect(console.error).toHaveBeenCalled();
+  });
+
+  it('should pass error to componentDidCatch', () => {
+    const spy = vi.spyOn(console, 'error');
+    render(
+      <ErrorBoundary fallback={FallbackUI}>
+        <ThrowingComponent />
+      </ErrorBoundary>
+    );
+
+    expect(spy).toHaveBeenCalledWith(
+      'Error caught by boundary:',
+      expect.any(Error),
+      expect.any(Object)
+    );
   });
 });
