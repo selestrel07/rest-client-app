@@ -1,45 +1,65 @@
 'use client';
 
-import { FC, useState, useEffect } from 'react';
-import {
-  MethodSelector,
-  EndpointInput,
-  HeadersEditor,
-  BodyEditor,
-  ResponseViewer,
-  CodeGenerator,
-} from '@components';
+import { FC, useEffect, useState } from 'react';
+import { useParams, useSearchParams } from 'next/navigation';
+import { convertUrlToRequest } from '@utils/requestUrlConverter';
 import { useTranslations } from 'next-intl';
 import { processRequest } from '@actions/request-actions';
 import { useAppDispatch } from '../../hooks/useAppStore';
 import { setToastValue } from '@states/toastSlice';
-import { APIResponse, RequestType } from '@types';
+import { APIResponse } from '@types';
+import {
+  MethodSelector,
+  HeadersEditor,
+  EndpointInput,
+  BodyEditor,
+  ResponseViewer,
+  CodeGenerator,
+} from '@components';
 
-export const RestClient: FC<{ defaultRequest?: RequestType }> = ({
-  defaultRequest,
-}) => {
+export const RestClient: FC = () => {
   const t = useTranslations('RestClient');
   const tMessages = useTranslations('Messages');
   const dispatch = useAppDispatch();
 
-  const [method, setMethod] = useState<string>(defaultRequest?.method || 'GET');
-  const [endpoint, setEndpoint] = useState<string>(defaultRequest?.url || '');
-  const [headers, setHeaders] = useState<Record<string, string>>(
-    defaultRequest?.headers ?? {}
-  );
-  const [body, setBody] = useState<string>(defaultRequest?.body || '');
+  const params = useParams();
+  const searchParams = useSearchParams();
+
+  const [method, setMethod] = useState<string>('GET');
+  const [endpoint, setEndpoint] = useState<string>('');
+  const [headers, setHeaders] = useState<Record<string, string>>({});
+  const [body, setBody] = useState<string>('');
   const [isJson, setIsJson] = useState<boolean>(true);
   const [response, setResponse] = useState<APIResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (defaultRequest) {
-      setMethod(defaultRequest.method || 'GET');
-      setEndpoint(defaultRequest.url || '');
-      setHeaders(defaultRequest.headers ?? {});
-      setBody(defaultRequest.body || '');
+    const { method: paramMethod, requestpart = [] } = params as {
+      method: string;
+      requestpart?: string[];
+    };
+
+    if (!paramMethod) return;
+
+    const parsed = convertUrlToRequest({
+      method: paramMethod,
+      requestpart,
+    });
+
+    const queryHeaders: Record<string, string> = {};
+    if (searchParams) {
+      for (const [key, value] of searchParams) {
+        if (!['method', 'url', 'body'].includes(key)) {
+          queryHeaders[key] = value;
+        }
+      }
     }
-  }, [defaultRequest]);
+
+    setMethod(parsed.method);
+    setEndpoint(parsed.url ?? '');
+    setBody(parsed.body ?? '');
+    setHeaders({ ...parsed.headers, ...queryHeaders });
+  }, [params, searchParams]);
 
   const isValidUrl = (string: string): boolean => {
     try {
