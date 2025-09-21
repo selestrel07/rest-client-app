@@ -68,6 +68,7 @@
     "requestSuccess": "Request processed successfully",
     "requestError": "Failed to fetch. Reason: {error}"
   },
+
   "History": {
     "noRequests": "You have not yet executed requests",
     "tryRestClient": "Try creating your first request in the REST Client.",
@@ -82,5 +83,11 @@
     "url": "Url",
     "errorUrl": "Invalid URL",
     "loading": "Loading Content..."
+  },
+  
+  "VariablesPage": {
+    "name": "Name: ",
+    "value": "Value: ",
+    "add": "Add"
   }
 }
