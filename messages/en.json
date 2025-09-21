@@ -72,5 +72,22 @@
     "name": "Name: ",
     "value": "Value: ",
     "add": "Add"
+  },
+  "History": {
+    "noRequests": "You have not yet executed requests",
+    "tryRestClient": "Try creating your first request in the REST Client.",
+    "restClient": "REST Client",
+    "history": "History Requests",
+    "time": "Time",
+    "status": "Status",
+    "date": "Date",
+    "error": "Error",
+    "method": "Method",
+    "url": "Url",
+    "errorUrl": "Invalid URL",
+    "loading": "Loading Content...",
+    "latency": "Latency",
+    "responseSize": "Response Size",
+    "requestSize": "Request Size"
   }
 }

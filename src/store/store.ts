@@ -1,4 +1,4 @@
-import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import uiReducer from '@states/uiSlice';
 import toastReducer from '@states/toastSlice';
 import variablesReducer from '@states/variablesSlice';
