@@ -1,7 +1,7 @@
 import { ToastProps } from '@components';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-type ToastState = ToastProps | null;
+export type ToastState = ToastProps | null;
 
 const initialState: ToastState = null as ToastState;
 
