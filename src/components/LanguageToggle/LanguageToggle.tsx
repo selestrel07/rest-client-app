@@ -16,7 +16,7 @@ export const LanguageToggle = () => {
   };
 
   return (
-    <div className="flex items-center gap-3">
+    <div data-testid="language-toggle" className="flex items-center gap-3">
       <button
         onClick={handleToggle}
         className="relative flex h-6 w-12 items-center rounded-full p-1 transition bg-violet-500"

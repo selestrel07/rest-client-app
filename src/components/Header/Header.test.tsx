@@ -17,6 +17,12 @@ vi.mock('@actions/auth-actions', () => ({
   removeAuthCookie: vi.fn(),
 }));
 
+const pushMock = vi.fn();
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: pushMock }),
+  usePathname: () => '/en/main',
+}));
+
 vi.mock('next-intl', () => ({
   useTranslations: () => (key: string) => {
     const dict: Record<string, string> = {
@@ -133,5 +139,24 @@ describe('Header component', () => {
 
     unmount();
     expect(removeSpy).toHaveBeenCalledWith('scroll', expect.any(Function));
+  });
+
+  it('renders LanguageToggle and logo', () => {
+    renderWithStore({
+      ui: { isAuthenticated: false, locale: 'en', user: 'test' },
+    });
+
+    expect(screen.getByLabelText('Go to main page')).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'Go to main page' })
+    ).toBeInTheDocument();
+    expect(screen.getByTestId('language-toggle')).toBeInTheDocument();
+  });
+
+  it('does not show Main link when user is not authenticated', () => {
+    renderWithStore({
+      ui: { isAuthenticated: false, locale: 'en', user: 'test' },
+    });
+    expect(screen.queryByText('Main')).not.toBeInTheDocument();
   });
 });
