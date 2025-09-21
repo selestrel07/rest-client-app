@@ -1,29 +1,22 @@
-import { CodeGenerator } from '@components';
-import dynamic from 'next/dynamic';
+import { convertUrlToRequest } from '@utils/requestUrlConverter';
+import { RestClient } from '@components';
 
-const RestClientLazy = dynamic(
-  () =>
-    import('../../../../../components/RestClient/RestClient').then(
-      (m) => m.RestClient
-    ),
-  { loading: () => <p>Loading...</p> }
-);
+export default async function RestDynamicPage({
+  params,
+}: {
+  params: Promise<{
+    locale: string;
+    method: string;
+    requestpart?: string[];
+  }>;
+}) {
+  const resolvedParams = await params;
+  const { method, requestpart = [] } = resolvedParams;
 
-export default function RestClientPage() {
-  return (
-    <div className="flex justify-end w-full">
-      <RestClientLazy />
-      <CodeGenerator
-        request={{
-          method: 'GET',
-          url: 'http://localhost:3000/',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: '{"language": "curl","url": "http://localhost:3000/","headers": {"Accept": "application/json"}}',
-        }}
-      />
-    </div>
-  );
+  const request = convertUrlToRequest({
+    method,
+    requestpart,
+  });
+
+  return <RestClient defaultRequest={request} />;
 }

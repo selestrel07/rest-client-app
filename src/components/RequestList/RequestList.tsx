@@ -1,69 +1,93 @@
 'use client';
 
+import { loadRequestData } from 'services/firebase.service';
+import { getCookie } from '@actions/auth-actions';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { useMemo } from 'react';
+import { useEffect, useState } from 'react';
+import { convertRequestToUrl } from '@utils/requestUrlConverter';
+import { RequestHistory } from '@types';
 
-export type RawRequest = {
-  method?: unknown;
-  url?: unknown;
-  timestamp?: string | number;
-  latency?: unknown;
-  status?: unknown;
-  requestSize?: unknown;
-  responseSize?: unknown;
-  errorType?: unknown;
-  headers?: unknown;
-  body?: unknown;
-};
-
-type Props = {
-  rawRequests: unknown;
-};
-
-export function RequestList({ rawRequests }: Props) {
+export function RequestList() {
   const t = useTranslations('History');
+  const [requests, setRequests] = useState<RequestHistory[]>([]);
+  const [loading, setLoading] = useState(true);
+  const locale = useLocale();
 
-  const requests = useMemo(() => {
-    if (!Array.isArray(rawRequests)) return [];
+  function useLocale(): string {
+    if (typeof window === 'undefined') return 'en';
+    const pathname = window.location.pathname;
+    const match = pathname.match(/^\/([a-z]{2})\//);
+    return match ? match[1] : 'en';
+  }
 
-    return rawRequests
-      .map((req): RequestHistory | null => {
-        if (!isRecord(req)) return null;
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const userId = await getCookie('userUid');
+        if (!userId) {
+          setRequests([]);
+          setLoading(false);
+          return;
+        }
 
-        const timestamp =
-          typeof req.timestamp === 'string'
-            ? new Date(req.timestamp).getTime()
-            : Number(req.timestamp);
+        const rawData = await loadRequestData(userId);
+        if (!Array.isArray(rawData)) {
+          setRequests([]);
+          setLoading(false);
+          return;
+        }
 
-        const isValidNumber = (n: unknown): n is number =>
-          typeof n === 'number' && !isNaN(n);
+        const validRequests = rawData
+          .map((req): RequestHistory | null => {
+            if (typeof req !== 'object' || req === null) return null;
 
-        return {
-          method: typeof req.method === 'string' ? req.method : 'GET',
-          url: typeof req.url === 'string' ? req.url : '',
-          timestamp: isValidNumber(timestamp) ? timestamp : Date.now(),
-          latency: isValidNumber(req.latency) ? req.latency : 0,
-          status: isValidNumber(req.status) ? req.status : 0,
-          requestSize: isValidNumber(req.requestSize) ? req.requestSize : 0,
-          responseSize: isValidNumber(req.responseSize) ? req.responseSize : 0,
-          errorType:
-            req.errorType === null || typeof req.errorType === 'string'
-              ? req.errorType
-              : null,
-          headers:
-            typeof req.headers === 'object' && req.headers !== null
-              ? (req.headers as Record<string, string>)
-              : undefined,
-          body: typeof req.body === 'string' ? req.body : undefined,
-        };
-      })
-      .filter((req): req is RequestHistory => req !== null)
-      .sort((a, b) => b.timestamp - a.timestamp);
-  }, [rawRequests]);
+            const timestamp =
+              typeof req.timestamp === 'string'
+                ? new Date(req.timestamp).getTime()
+                : Number(req.timestamp);
 
-  function isRecord(obj: unknown): obj is Record<string, unknown> {
-    return typeof obj === 'object' && obj !== null && !Array.isArray(obj);
+            const isValidNumber = (n: unknown): n is number =>
+              typeof n === 'number' && !isNaN(n);
+
+            return {
+              method: typeof req.method === 'string' ? req.method : 'GET',
+              url: typeof req.url === 'string' ? req.url : '',
+              timestamp: isValidNumber(timestamp) ? timestamp : Date.now(),
+              latency: isValidNumber(req.latency) ? req.latency : 0,
+              status: isValidNumber(req.status) ? req.status : 0,
+              requestSize: isValidNumber(req.requestSize) ? req.requestSize : 0,
+              responseSize: isValidNumber(req.responseSize)
+                ? req.responseSize
+                : 0,
+              errorType:
+                req.errorType === null || typeof req.errorType === 'string'
+                  ? req.errorType
+                  : null,
+              headers:
+                typeof req.headers === 'object' && req.headers !== null
+                  ? (req.headers as Record<string, string>)
+                  : undefined,
+              body: typeof req.body === 'string' ? req.body : undefined,
+            };
+          })
+          .filter((req): req is RequestHistory => req !== null)
+          .sort((a, b) => b.timestamp - a.timestamp);
+
+        setRequests(validRequests);
+      } catch (error) {
+        console.error('Failed to load requests:', error);
+        setRequests([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    load();
+  }, []);
+
+  if (loading) {
+    return <p className="text-center p-4">Loading request history...</p>;
   }
 
   if (requests.length === 0) {
@@ -73,7 +97,7 @@ export function RequestList({ rawRequests }: Props) {
           <h1 className="text-2xl font-bold mb-4">{t('noRequests')}</h1>
           <p className="mb-6">{t('tryRestClient')}</p>
           <Link
-            href="/rest"
+            href={`/${locale}/rest`}
             className="inline-block px-6 py-2 bg-violet-500 hover:bg-violet-600 text-white rounded transition-colors"
           >
             {t('restClient')}
@@ -91,17 +115,8 @@ export function RequestList({ rawRequests }: Props) {
           {requests.map((req, i) => {
             const isFailed = req.status >= 400 || req.errorType;
 
-            const query = new URLSearchParams();
-            query.set('method', req.method);
-            query.set('url', btoa(encodeURIComponent(req.url)));
-            if (req.headers && Object.keys(req.headers).length > 0) {
-              query.set('headers', btoa(JSON.stringify(req.headers)));
-            }
-            if (req.body) {
-              query.set('body', btoa(encodeURIComponent(req.body)));
-            }
-
-            const href = `/rest?${query.toString()}`;
+            const pathSuffix = convertRequestToUrl(req);
+            const href = `/${locale}/rest/${req.method}${pathSuffix}`;
 
             const date = new Date(req.timestamp);
             const formattedDate = date.toLocaleDateString();
@@ -184,16 +199,3 @@ export function RequestList({ rawRequests }: Props) {
     </div>
   );
 }
-
-export type RequestHistory = {
-  method: string;
-  url: string;
-  timestamp: number;
-  latency: number;
-  status: number;
-  requestSize: number;
-  responseSize: number;
-  errorType: string | null;
-  headers?: Record<string, string>;
-  body?: string;
-};

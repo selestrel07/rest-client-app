@@ -7,8 +7,8 @@ export type RequestData = {
   responseSize: number;
   errorType?: string;
   url: string;
-  headers: Record<string, string>;
-  body: string;
+  headers?: Record<string, string>;
+  body?: string;
 };
 
 export type RequestHistory = {
@@ -20,4 +20,6 @@ export type RequestHistory = {
   requestSize: number;
   responseSize: number;
   errorType: string | null;
+  headers?: Record<string, string>;
+  body?: string;
 };

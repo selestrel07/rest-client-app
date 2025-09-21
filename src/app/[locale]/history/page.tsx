@@ -1,4 +1,3 @@
-import { loadRequestData } from 'services/firebase.service';
 import { getCookie } from '@actions/auth-actions';
 import dynamic from 'next/dynamic';
 
@@ -18,7 +17,5 @@ export default async function HistoryPage() {
     return <div className="text-center">Authentication required</div>;
   }
 
-  const rawData = await loadRequestData(userId);
-
-  return <RequestList rawRequests={rawData} />;
+  return <RequestList />;
 }

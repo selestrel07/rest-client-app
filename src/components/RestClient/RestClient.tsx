@@ -13,54 +13,33 @@ import { useTranslations } from 'next-intl';
 import { processRequest } from '@actions/request-actions';
 import { useAppDispatch } from '../../hooks/useAppStore';
 import { setToastValue } from '@states/toastSlice';
-import { APIResponse } from '@types';
+import { APIResponse, RequestType } from '@types';
 
-type InitialRequest = {
-  method?: string;
-  url?: string;
-  headers?: Record<string, string>;
-  body?: string;
-};
-
-export const RestClient: FC<{ initialRequest?: InitialRequest }> = ({
-  initialRequest,
+export const RestClient: FC<{ defaultRequest?: RequestType }> = ({
+  defaultRequest,
 }) => {
   const t = useTranslations('RestClient');
   const tMessages = useTranslations('Messages');
   const dispatch = useAppDispatch();
 
-  const [method, setMethod] = useState<string>('GET');
-  const [endpoint, setEndpoint] = useState<string>('');
-  const [headers, setHeaders] = useState<Record<string, string>>({});
-  const [body, setBody] = useState<string>('');
+  const [method, setMethod] = useState<string>(defaultRequest?.method || 'GET');
+  const [endpoint, setEndpoint] = useState<string>(defaultRequest?.url || '');
+  const [headers, setHeaders] = useState<Record<string, string>>(
+    defaultRequest?.headers ?? {}
+  );
+  const [body, setBody] = useState<string>(defaultRequest?.body || '');
   const [isJson, setIsJson] = useState<boolean>(true);
   const [response, setResponse] = useState<APIResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (initialRequest) {
-      if (
-        initialRequest.method &&
-        ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].includes(
-          initialRequest.method
-        )
-      ) {
-        setMethod(initialRequest.method);
-      }
-
-      if (initialRequest.url) {
-        setEndpoint(initialRequest.url);
-      }
-
-      if (initialRequest.headers) {
-        setHeaders(initialRequest.headers);
-      }
-
-      if (initialRequest.body !== undefined) {
-        setBody(initialRequest.body);
-      }
+    if (defaultRequest) {
+      setMethod(defaultRequest.method || 'GET');
+      setEndpoint(defaultRequest.url || '');
+      setHeaders(defaultRequest.headers ?? {});
+      setBody(defaultRequest.body || '');
     }
-  }, [initialRequest]);
+  }, [defaultRequest]);
 
   const isValidUrl = (string: string): boolean => {
     try {
