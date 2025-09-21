@@ -11,13 +11,3 @@ export type RequestData = {
   body: string;
 };
 
-export type RequestHistory = {
-  method: string;
-  url: string;
-  timestamp: number;
-  latency: number;
-  status: number;
-  requestSize: number;
-  responseSize: number;
-  errorType: string | null;
-};
