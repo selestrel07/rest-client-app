@@ -67,13 +67,17 @@ export const RestClient: FC = () => {
     router.replace(url);
   };
 
-  const handleSubmit = async () => {
-    const res = await processRequest({
+  const interpolateRequestParameters = useMemo(() => {
+    return {
       method: interpolateString(method, variables),
       body: interpolateString(body, variables),
       headers: interpolatePlainObject(headers, variables),
       url: interpolateString(endpoint, variables),
-    });
+    };
+  }, [method, body, headers, endpoint]);
+
+  const handleSubmit = async () => {
+    const res = await processRequest(interpolateRequestParameters);
 
     if (res.result === 'success') {
       const result: APIResponse =
@@ -103,12 +107,7 @@ export const RestClient: FC = () => {
       );
     }
 
-    const newUrl = buildRestUrl({
-      method,
-      url: endpoint,
-      headers,
-      body,
-    });
+    const newUrl = buildRestUrl(interpolateRequestParameters);
     router.replace(newUrl);
   };
 
@@ -160,7 +159,7 @@ export const RestClient: FC = () => {
 
           <HeadersEditor
             headers={headers}
-            onAdd={(k, v) => dispatch(addHeader({ key: k, value: v }))}
+            onAdd={(k, v) => dispatch(addHeader({ [k]: v }))}
             isValid={isHeadersValid}
           />
 
@@ -187,14 +186,14 @@ export const RestClient: FC = () => {
             {isLoading ? '...' : t('sendRequest')}
           </button>
 
-          {Object.keys(response).length && (
+          {Object.keys(response).length > 0 ? (
             <div className="mt-6 p-4 border border-violet-700 rounded bg-violet-50">
               <h2 className="text-lg font-semibold mb-2 text-gray-700">
                 {t('response')}
               </h2>
               <ResponseViewer data={response} />
             </div>
-          )}
+          ) : undefined}
         </div>
         <CodeGenerator
           request={{
