@@ -1,8 +1,8 @@
 export const mockResponseBodyJson = {
-  body: `{
-        postId: 12,
-        title: 'Test',
-      }`,
+  body: {
+    postId: 12,
+    title: 'Test',
+  },
 };
 
 export const mockResponseBodyText = 'some text';

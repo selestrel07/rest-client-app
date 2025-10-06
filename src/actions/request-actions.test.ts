@@ -28,7 +28,7 @@ describe('Request Actions tests', () => {
     const result = await processRequest(userRequest);
 
     expect(result.result).toBe('success');
-    expect(result.body).toBe(mockResponseBodyJson.body);
+    expect(result.body).toBe(mockResponseBodyJson);
   });
 
   it('Should throw in case of URL absent', async () => {
