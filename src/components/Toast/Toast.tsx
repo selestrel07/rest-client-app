@@ -22,7 +22,7 @@ const Toast: FC<ToastProps> = ({ message, type }) => {
     <div
       data-testid="toast"
       className={`fixed flex items-center justify-between bottom-4 right-4 p-3 cursor-pointer
-      rounded-lg shadow-lg text-white w-1/4 h-15 z-50 transition-opacity duration-300 ${
+      rounded-lg shadow-lg text-white w-1/4 min-h-15 z-50 transition-opacity duration-300 ${
         type === 'error'
           ? 'bg-red-400/80'
           : type === 'success'
