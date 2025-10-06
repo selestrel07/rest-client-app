@@ -20,7 +20,7 @@ export function ResponseViewer({ data }: { data: APIResponse }) {
       <pre className="p-4 bg-violet-100 rounded overflow-auto w-full text-sm whitespace-pre-wrap scroll-thin max-h-[50vh]">
         {isValidJson(data.data)
           ? prettifyJson(data.data)
-          : data.data.replaceAll(/></g, '>\n<').replaceAll(/&quot;/g, '"')}
+          : JSON.stringify(data.data)}
       </pre>
     </div>
   );

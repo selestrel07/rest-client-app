@@ -39,12 +39,13 @@ export async function processRequest(request: RequestType) {
       requestData.responseSize = Buffer.byteLength(result);
     } else {
       if (isJson) {
-        const json = await response.json();
-        result = json.body;
+        result = await response.json();
       } else {
         result = await response.text();
       }
-      requestData.responseSize = Buffer.byteLength(result);
+      requestData.responseSize = Buffer.byteLength(
+        typeof result === 'object' ? JSON.stringify(result) : result
+      );
     }
 
     requestData.url = request.url;
