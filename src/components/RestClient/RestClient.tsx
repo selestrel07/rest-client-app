@@ -80,7 +80,7 @@ export const RestClient: FC = () => {
       headers: interpolatePlainObject(headers, variables),
       url: interpolateString(endpoint, variables),
     };
-  }, [method, body, headers, endpoint]);
+  }, [method, body, headers, endpoint, variables]);
 
   const handleSubmit = async () => {
     const res = await processRequest(interpolateRequestParameters);
@@ -105,6 +105,7 @@ export const RestClient: FC = () => {
         })
       );
     } else {
+      dispatch(clearResponse());
       dispatch(
         setToastValue({
           type: 'error',
